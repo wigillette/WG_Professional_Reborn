@@ -58,7 +58,6 @@ import { relevantCourses, courseInfo } from "../shared/data/courses";
 import Info from '@mui/icons-material/Info';
 import Paper from "@mui/material/Paper";
 import projects from "../shared/data/projects";
-import Youtube from "@mui/icons-material/Youtube";
 import Carousel from "@/components/Carousel/Carousel";
 import Drawer from "@mui/material/Drawer";
 import carouselImages from "@/shared/data/carousel";
@@ -398,7 +397,7 @@ export default function Home() {
                               }
                               {Object.keys(project.media).includes('video') && 
                                 <IconButton color='error' href={project.media.video}>
-                                  <Youtube/>
+                                  <Web/>
                                 </IconButton>
                               }
 
