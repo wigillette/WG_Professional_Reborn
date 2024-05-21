@@ -230,7 +230,7 @@ export default function Home() {
                     <ImageList variant='quilted' cols={2} rowHeight={300} sx={{width: '100%', mb: '1rem', mt: '1rem', mr: '2rem'}}>
                       {currentAction != null && currentAction in actionImages && actionImages[currentAction].map((imageItem) => (
                         <ImageListItem key={imageItem.img} cols={imageItem.cols || 1} rows={imageItem.rows || 1}>
-                          <img {...srcset(imageItem.img, 300, imageItem.rows, imageItem.cols)} alt='' loading='lazy'/>
+                          <img {...srcset(imageItem.img, 300, imageItem.rows, imageItem.cols)} alt=''/>
                         </ImageListItem>
                       ))}
                     </ImageList>
