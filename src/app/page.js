@@ -60,6 +60,7 @@ import Paper from "@mui/material/Paper";
 import projects from "../shared/data/projects";
 import Carousel from "@/components/Carousel/Carousel";
 import Drawer from "@mui/material/Drawer";
+import Image from "next/image";
 import carouselImages from "@/shared/data/carousel";
 
 function srcset(image, size, rows = 1, cols = 1) {
@@ -230,7 +231,7 @@ export default function Home() {
                     <ImageList variant='quilted' cols={2} rowHeight={300} sx={{width: '100%', mb: '1rem', mt: '1rem', mr: '2rem'}}>
                       {currentAction != null && currentAction in actionImages && actionImages[currentAction].map((imageItem) => (
                         <ImageListItem key={imageItem.img} cols={imageItem.cols || 1} rows={imageItem.rows || 1}>
-                          <img {...srcset(imageItem.img, 300, imageItem.rows, imageItem.cols)} alt=''/>
+                          <Image  alt=''  src={`${imageItem.img}`} fill={true} style={{objectFit: 'cover'}}/>
                         </ImageListItem>
                       ))}
                     </ImageList>
