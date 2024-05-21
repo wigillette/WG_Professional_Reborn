@@ -1,0 +1,9 @@
+.Carousel {
+    max-width: 40%;
+}
+
+@media (max-width: 520px) {
+    .Carousel {
+        max-width: 100%;
+    }
+}
