@@ -51,7 +51,7 @@ import GitHub from "@mui/icons-material/GitHub";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Web from "@mui/icons-material/Web";
 import Download from "@mui/icons-material/Download";
-import YouTube from "@mui/icons-material/Youtube";
+import YouTube from "@mui/icons-material/YouTube";
 import {actions, actionImages, actionInfo} from "../shared/data/actions";
 import skills from "../shared/data/skills";
 import bio from "../shared/data/bio";
