@@ -234,7 +234,7 @@ export default function Home() {
                           <Paper elevation={2} sx={{bgcolor: '#252525'}}>
                             <Box margin='1rem'>
                               <Typography variant='h6' pt='1rem' fontFamily={'Poppins'} fontWeight={'300'} gutterBottom>Biography</Typography>
-                              {bio.map((p) => <Typography key={p} fontFamily={'Poppins'} pb='1rem' color='text.secondary'>{p}</Typography>)}
+                              {bio.map((p,i) => <Typography key={i} fontFamily={'Poppins'} pb='1rem' color='text.secondary'>{p}</Typography>)}
                             </Box>
                           </Paper>
                         </Grid>
