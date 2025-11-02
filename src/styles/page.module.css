@@ -1,0 +1,136 @@
+.main {
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  /* background-color: #161614 !important; */
+}
+
+.parallax {
+  width: 100%;
+  height: 100%;
+}
+
+.banner {
+  width: 100vw;
+  height: 18vh;
+}
+
+.banner div {
+  height: 100%;
+}
+
+.head {
+  height: 220px;
+  width: 220px;
+}
+
+.skillChip:hover {
+  border-color: rgb(13, 110, 253, 1);
+  color: rgb(13, 110, 253, 1);
+  transition: 0.3s;
+}
+
+.skillChip {
+  background-color: #191919;
+  transition: 0.3s !important;
+}
+
+.actionTabs div div button {
+  width: 33% !important;
+}
+
+.skillBank {
+  width: 90vw;
+}
+
+.actionItemPC {
+  display: none;
+}
+
+.coursePages div p {
+  font-family: 'Poppins';
+  font-size: 90%;
+}
+
+.actionItemMobile:hover {
+  transform: translate(0%, -10%);
+}
+
+.actionItemMobile {
+  transition: transform 0.2s ease-in-out;
+}
+
+.actionDesc, .actionImages {
+  display: none;
+}
+
+.actionContainer {
+  width: 75vw;
+}
+
+.mobileAction {
+  display: inline;
+}
+
+.courseOpenButton {
+  color: #1e90ff;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.courseOpenButton:hover {
+  color: rgb(13, 110, 253, 1);
+  transition: all 0.2s ease-in-out !important;
+  cursor: pointer;
+}
+
+.descToggle {
+  transition: all 0.2s ease-in-out;
+}
+
+.messengerFormText {
+  transition: border 0.3s ease-in-out
+}
+
+@media screen and (min-height: 1000px) {
+  .mobileMenu {
+    display: none;
+  }
+
+  .banner {
+    height: 28vh;
+  }
+
+  .actionDesc, .actionImages {
+    display: inline;
+  }
+
+  .head {
+    height: 300px;
+    width: 300px;
+  }
+  
+  .skillBank {
+    width: 40vw;
+  }
+
+  .actionItemPC {
+    width: 10vw;
+    display: block;
+  }
+
+  .actionItemMobile {
+    display: none;
+  }
+
+  .actionContainer {
+    width: 40vw;
+  }
+
+  .actionTabs div div {
+    justify-content: center;
+  }
+
+  .mobileAction {
+    display: none;
+  }
+}
