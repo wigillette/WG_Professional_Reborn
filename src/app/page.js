@@ -6,18 +6,25 @@ import EmailIcon from '@mui/icons-material/Email';
 import GithubIcon from '@mui/icons-material/GitHub';
 import DownloadIcon from '@mui/icons-material/Download';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Info, YouTube } from '@mui/icons-material';
 import {
-  AppBar, Toolbar, Drawer, ListItemButton, ListItemText, Box, Container, Typography, Grid, Card, ButtonBase, CardContent, List, ListItem,
-  Chip, Avatar, Divider, Fab, Modal, TextField, Button, ImageList, ImageListItem, IconButton, Snackbar, Alert, Tooltip
+  AppBar, Toolbar, Drawer, ListItemButton, ListItemText, Box, Container, Typography, Grid, Card, ButtonBase, CardContent, List, ListItem, Collapse, Fade,
+  Chip, Avatar, Divider, Fab, Modal, TextField, Button, ImageList, ImageListItem, IconButton, Snackbar, Alert, Tooltip, Table, TableBody, Accordion, AccordionDetails, AccordionSummary,  TableRow, TableCell
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import Link from '@mui/icons-material/Link'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
+import Description from '@mui/icons-material/Description'
+import { Award, Medal, GraduationCap, Trophy, Users, Heart } from "lucide-react";
+import { useTheme } from '@mui/material/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { motion, AnimatePresence, useAnimation, useTransform, useScroll } from 'framer-motion';
 import theme from './theme';
 import Image from 'next/image';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import emailjs from '@emailjs/browser';
 
 /**
  * Portfolio — upgraded, interactive page
@@ -43,18 +50,35 @@ export default function Portfolio() {
   const closeContact = () => setContactOpen(false);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success' | 'error'
+  const [sending, setSending] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: add your send logic here
+    setSending(true); // disable button while sending
 
-    // Show snackbar
-    setSnackbarOpen(true);
-  };
+    const form = e.target;
 
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') return; // prevent closing on clickaway
-    setSnackbarOpen(false);
+    emailjs.sendForm(
+      'service_in42464',     // replace with your EmailJS service ID
+      'template_65cyc5l',    // replace with your EmailJS template ID
+      form,
+      'ueGEUc8NP57Dh4jBS'      // replace with your EmailJS public key
+    )
+      .then((result) => {
+        console.log('Email sent successfully:', result.text);
+        setSnackbarMessage('Message sent successfully!');
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
+        form.reset(); // clear form
+      })
+      .catch((error) => {
+        console.error('Failed to send email:', error.text);
+        setSnackbarMessage('Failed to send message. Please try again later.');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      })
+      .finally(() => setSending(false)); // re-enable button
   };
 
   // --------- Scroll to top mini FAB ----------
@@ -96,8 +120,8 @@ export default function Portfolio() {
 
   // --------- Content (you can edit these) ----------
   const selectedSkills = [
-    'Python', 'RStudio', 'JavaScript', 'SQL', 'Digital Signal Processing', 'NLP', 'Computer Vision',
-    'Bayesian Methods', 'Statistical Modeling', 'Machine Learning', 'PowerBI'
+    'Python', 'RStudio', 'JavaScript', 'SQL', 'Statistical Modeling', 'Supervised Learning', 'Unsupervised Learning', 'Deep Learning', 'Digital Signal Processing', 'NLP', 'Computer Vision',
+    'Bayesian Methods', 'PowerBI'
   ];
   const galleryImages = ["UPE2.JPG", "XC2.png", "Wide.jpg", "Seniors.jpg", "XC6.JPG","Little.png"];
 
@@ -110,7 +134,8 @@ export default function Portfolio() {
         'Compared elderly and young adult women in CA & FL; accounted for stringency indices and DALYs',
         'Found increase in CVD prevalence in Florida (p=0.002) and decline in CA DALYs (p=0.031)'
       ],
-      images: ['CausalImpact.png']
+      images: ['CausalImpact.png'],
+      download: '/documents/WG_STAT451_Project2.pdf',
     },
     {
       title: 'Evaluating the Sensitivity of the Housing Market',
@@ -120,7 +145,9 @@ export default function Portfolio() {
         'Applied Bayesian regression with LOO cross-validation and residual diagnostics',
         'Corrected violations of assumptions to extract top drivers: inflation, unemployment, population growth'
       ],
-      images: ['HousingPrices.png']
+      images: ['HousingPrices.png'],
+      video: 'https://youtu.be/CupEEHo8XuU',
+      download: '/documents/WG_STAT342_FinalProject.pdf'
     },
     {
       title: 'Ursinus College Degree Builder',
@@ -130,7 +157,9 @@ export default function Portfolio() {
         'Built full-stack React app with SQLite backend for academic planning',
         'Coordinated weekly standups and user testing to iterate UI/UX'
       ],
-      images: ['DegreePlanner.png']
+      images: ['DegreePlanner.png'],
+      video: 'https://www.youtube.com/watch?v=o9z4vJPbrN0',
+      link: 'https://wigillette.github.io/GatewayRevamp/'
     },
     {
       title: 'Large Scale Audio Version Identification',
@@ -140,7 +169,9 @@ export default function Portfolio() {
         'Built and evaluated CNNs for audio version/cover identification',
         'Scaled experiments to optimize accuracy and generalization'
       ],
-      images: ['CoverSong.png']
+      images: ['CoverSong.png'],
+      download: '/documents/CS_Honors_Presentation.pdf',
+      link: 'https://github.com/ctralie/acoss'
     }
   ];
 
@@ -207,8 +238,136 @@ export default function Portfolio() {
     );
   };
 
-  const carouselImages = ['Somerville.png','XC1.png','Parents.jpg','XC7.JPG','Boston.png','PhiKaps.png','Regionals.JPG'];
-  const toolTips={'Python': 'PyTorch, Pandas, Numpy, Scikit-learn, Statsmodels, Matplotlib, Seaborn', 'Digital Signal Processing': 'Waveforms, Fourier transform, Mel specrograms','NLP': 'Natural Language Processing', 'Statistical Modeling': 'Generalized Linear Models, Gaussian Mixture Models, Hidden Markov Models', 'Bayesian Methods': 'BSTS, Bayesian Networks, Naive Bayes', 'Machine Learning':'Supervised, Unsupervised, Deep Learning','JavaScript':'React/Redux, Bootstrap 5, Node.js', 'Computer Vision': 'Convolutional Neural Networks'}
+  const CourseRow = ({ course }) => {
+    const theme = useTheme()
+    const [open, setOpen] = React.useState(false);
+    return (
+      <>
+        <TableRow
+          hover
+          sx={{
+            '&:hover': { backgroundColor: 'rgba(255,255,255,0.05)' },
+            transition: 'background-color 0.2s ease'
+          }}
+        >
+          <TableCell sx={{ color: '#fff', borderBottom: 'none' }}>
+            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+              {course.name}
+              {course.id && (
+                <Typography
+                  component="span"
+                  variant="body2"
+                  sx={{
+                    color: 'rgba(255,255,255,0.6)',
+                    ml: 1,
+                    fontSize: '0.8rem',
+                    fontStyle: 'italic'
+                  }}
+                >
+                  ({course.id})
+                </Typography>
+              )}
+            </Typography>
+          </TableCell>
+
+          <TableCell sx={{ textAlign: 'right', borderBottom: 'none' }}>
+            <IconButton
+              size="small"
+              onClick={() => setOpen(!open)}
+              sx={{
+                p: 0.5,
+                color: open ? theme.palette.primary.main : '#fff',
+                transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <Info />
+            </IconButton>
+          </TableCell>
+        </TableRow>
+
+        <TableRow>
+          <TableCell colSpan={2} sx={{ borderBottom: 'none', p: 0 }}>
+            <Collapse
+              in={open}
+              timeout={400}
+              unmountOnExit
+              easing="cubic-bezier(0.4, 0, 0.2, 1)"
+            >
+              <Fade in={open} timeout={400}>
+                <Box
+                  sx={{
+                    color: 'rgba(255,255,255,0.85)',
+                    fontSize: '0.85rem',
+                    p: 1.5,
+                    pl: 2.5,
+                    borderLeft: '2px solid rgba(255,255,255,0.2)',
+                    backgroundColor: 'rgba(255,255,255,0.03)',
+                    borderRadius: 1,
+                    mb: 1,
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  {course.description}
+                </Box>
+              </Fade>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </>
+    );
+  };
+
+  const educationData = [
+    {
+      school: 'Johns Hopkins University',
+      logo: '/images/Hopkins.png',
+      degree: 'M.S. Data Science — AI & Machine Learning',
+      gpa: '4.0 — Expected May 2027',
+      courses: [
+        { id: '685.621', name: 'Algorithms for Data Science', description: 'This course offers an in-depth journey through the algorithmic concepts vital for mastering the intricacies of data science. It begins with an intensive examination of algorithm analysis, with a special focus on understanding the runtime complexities essential for addressing real-world data problems. The curriculum encompasses thorough training in data preprocessing, along with foundational knowledge in probability and statistics, equipping students to proficiently clean and interpret data. The course introduces key mathematical transformations such as Eigen decomposition, FFT, DCT, and Wavelets. These tools are crucial for unearthing underlying patterns in data by creating innovative feature spaces. Students will explore a seamless blend of diverse algorithm types, including intelligent algorithms, statistical algorithms, optimization algorithms, graph algorithms, and learning algorithms. This comprehensive approach, enriched with optimization techniques, forms a holistic toolkit for the contemporary Data Scientist. Moving beyond theoretical concepts, the course delves into practical aspects of analysis, visualization, and understanding of complexity classes. Occasional forays into algorithmic proofs enhance the theoretical grounding of students, bridging theory with practical application. The course culminates in modules focused on data modeling and visualization, enabling students to adeptly apply algorithmic techniques to produce insightful and meaningful data representations.' },
+        { id: '685.662', name: 'Data Patterns and Representations', description: 'This course will explore the practical application of data visualization and representation, employing lenses such as personas, to understand the different purposes of visualizations. Data visualization plays a crucial role in the entire data science process, serving multiple purposes such as communicating results and insights in a clear and understandable way, facilitating preliminary data exploration, and analyzing outcomes from physics-based or machine learning models and simulations. The course will introduce various tools and equip students with the knowledge to effectively choose the most suitable tool for a given problem. We will also explore various essential tools for data visualization, including Microsoft Excel, Python plotting libraries like matplotlib and plotly, Python graphical interfacing libraries such as streamlit, and Tableau, among others.' },
+        { id: '625.603', name: 'Statistical Methods and Data Analysis', description: 'This course introduces statistical methods that are widely used in modern applications. A balance is struck between the presentation of the mathematical foundations of concepts in probability and statistics and their appropriate use in a variety of practical contexts. Foundational topics of probability, such as probability rules, related inequalities, random variables, probability distributions, moments, and jointly distributed random variables, are followed by foundations of statistical inference, including estimation approaches and properties, hypothesis testing, and model building. Data analysis ranging from descriptive statistics to the implementation of common procedures for estimation, hypothesis testing, and model building is the focus after the foundational methodology has been covered. Software, for example R-Studio, will be leveraged to illustrate concepts through simulation and to serve as a platform for data analysis.' },
+        { id: '625.603', name: 'Data Engineering Principles and Practice', description: 'Data Engineering is the ingestion, transformation, storage and serving of data in ways that enable data scientists or applications to use and derive insights from data. In this course, we will look at various file-based data formats, data collection, data cleansing, data transformation, and data modeling for both relational and NoSQL databases. The course will also cover movement of data into data warehouses and/or data lakes using pipelines and workflow automation. Finally, we will discuss data security, governance, and compliance.' },
+        { id: '625.603', name: 'Computational Statistics', description: 'Computational statistics is a branch of mathematical sciences concerned with efficient methods for obtaining numerical solutions to statistically formulated problems. This course will introduce students to a variety of computationally intensive statistical techniques and the role of computation as a tool of discovery. Topics include numerical optimization in statistical inference [expectation-maximization (EM) algorithm, Fisher scoring, etc.], random number generation, Monte Carlo methods, randomization methods, jackknife methods, bootstrap methods, tools for identification of structure in data, estimation of functions (orthogonal polynomials, splines, etc.), and graphical methods.' }
+      ]
+    },
+    {
+      school: 'Ursinus College',
+      logo: '/images/Ursinus.png',
+      degree: 'B.S., Triple Major — Computer Science | Statistics | Mathematics',
+      gpa: '3.99 — December 2024',
+      courses: [
+        { id: 'MATH-442', name: 'Mathematical Statistics', description: 'The mathematical background of modern statistics, including the development of sampling distributions, the theory and application of estimation, tests of hypotheses. This course will satisfy the College requirement for a capstone experience in the major.' },
+        { id: 'STAT-443', name: 'Statistical Modeling', description: 'This course will delve into the mathematical and theoretical underpinnings of linear regression, Analysis of Variance (ANOVA), non-parametric statistics and Bayesian methods for statistical inference. This course will satisfy the college requirement for a capstone experience in the major.' },
+        { id: 'MATH-311W', name: 'Real Analysis', description: 'An introduction to the real number system and set operations; theoretical treatment of supremum, infimum, countability, sequences, limits, continuity, and differentiability. Additional topics may include series, structure of point sets and abstract metric spaces. Emphasis on writing mathematical proofs.' },
+        { id: 'STAT-342', name: 'Applied Regression Models', description: 'A study of regression models. This course will begin by reviewing simple linear regression and progress to more general modeling approaches including multiple regression models and generalized linear models. Models, inferences, diagnostics, and remedial measures for dealing with invalid assumptions will be examined.' },
+        { id: 'CS-377', name: 'Database Design', description: 'The concepts involved in designing and using a database management system. Logical and physical database design. Entity-Relational Modeling. Various types of database structures, manipulations of a database structure through applications, query techniques, and programming in a database language.' },
+        { id: 'CS-371W', name: 'Data Structures & Algorithms', description: 'Introduction to algorithm analysis and data structures. Complexity of algorithms, analyzing basic data structure operations, searching and sorting algorithms, tables, hashing, recursion, dynamic programming, tree and graph algorithms.' },
+      ]
+    }
+  ];
+
+  const carouselImages = [
+    'Somerville.png',
+    'XC1.png',
+    'Parents.jpg',
+    'XC7.JPG',
+    'Boston.png',
+    'PhiKaps.png',
+    'Regionals.JPG'
+  ];
+
+  const imageCaptions = {
+    'Somerville.png': 'William and his extended family spending the day in Somerville, NJ',
+    'XC1.png': 'XC Centennial Conference Championships held at McDaniel College in October 2023',
+    'Parents.jpg': 'William and his parents attending his undergraduate commencement ceremony.',
+    'XC7.JPG': 'Ursinus College Fall Twilight Senior Ceremony held in November 2023',
+    'Boston.png': 'William and his immediate family at his sister\'s Emerson College graduate commencement ceremony in Boston, MA',
+    'PhiKaps.png': 'Phi Kappa Sigma International Fraternity Delta Rho Chapter',
+    'Regionals.JPG': 'Last 400m of the 2023 NCAA Metro Regionals held at Dream Park, Glocester, NJ'
+  };
+  const toolTips={'Python': 'PyTorch, Pandas, Numpy, Scikit-learn, Statsmodels, Matplotlib, Seaborn', 'Digital Signal Processing': 'Waveforms, Fourier transform, Mel specrograms','NLP': 'Natural Language Processing', 'Statistical Modeling': 'Generalized Linear Models, Gaussian Mixture Models, Hidden Markov Models, Expectation-Maximization, Bootstrapping', 'Bayesian Methods': 'BSTS, Bayesian Networks, Naive Bayes', 'Supervised Learning':'Random Forest, Support Vector Machines, Logistic Regression, K-Nearest Neighbors','Unsupervised Learning': 'K-Means Clustering, Principal Component Analysis, DBSCAN', 'Deep Learning': 'Feedforward Neural Networks, Convolutional Neural Networks, Recurrent Neural Networks, Transfer Learning','JavaScript':'React/Redux, Bootstrap 5, Node.js', 'Computer Vision': 'Image Processing, Convolutional Neural Networks'}
 
   // --------- Motion variants ----------
   const sectionVariant = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } };
@@ -275,12 +434,33 @@ export default function Portfolio() {
       <HeroParallax/>
       <Container sx={{ py: 6 }}>
         {/* ===== Professional Summary ===== */}
-        <motion.div id='summary' initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariant}>
-          <Typography variant="h5" sx={{ color: theme.palette.primary.main, fontWeight: 700 }}>Professional Summary</Typography>
-          <Typography paragraph sx={{ mt: 1 }}>
-            Leveraging data science and full-stack development to deliver actionable insights and business intelligence. Experienced in statistical modeling, visualization, and software solutions for public sector and research applications. Currently pursuing a Master’s in Data Science at Johns Hopkins University, specializing in AI and machine learning.
-          </Typography>
+        <motion.div
+          id="summary"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <Box
+            sx={{
+              textAlign: 'center',
+              py: 4,
+              px: 1,
+              background: 'linear-gradient(90deg, #1976d2, #21cbf3)',
+              borderRadius: 2,
+              color: '#fff',
+              boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+            }}
+          >
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+              Data Scientist & AI Enthusiast
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 400 }}>
+              Turning data into actionable insights and intelligent solutions to drive digital transformation across industries
+            </Typography>
+          </Box>
         </motion.div>
+
         {/* ===== About Me (avatar left) ===== */}
         <motion.div id='about' initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariant}>
           <Grid container spacing={3} alignItems="center" sx={{ mt: 0 }}>
@@ -324,47 +504,97 @@ export default function Portfolio() {
                 variant="contained"
                 startIcon={<DownloadIcon />}
                 component="a"
-                href="/public/documents/WG_CV.pdf"
+                href="/documents/WG_CV.pdf"
                 download
                 sx={{ mt: 1, backgroundColor: theme.palette.primary.main }}
               >
-                Download Resume
+                Resume
               </Button>
             </Grid>
 
           </Grid>
         </motion.div>
 
-        {/* ===== Education (logos horizontal) ===== */}
-        <motion.div id='education' initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariant}>
-          <Typography variant="h5" sx={{ mt: 4, color: theme.palette.primary.main, fontWeight: 700 }}>Education</Typography>
+        {/* ===== Education Section ===== */}
+        <motion.div
+          id="education"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={sectionVariant}
+        >
+          <Typography
+            variant="h5"
+            sx={{
+              mt: 4,
+              color: theme.palette.primary.main,
+              fontWeight: 700
+            }}
+          >
+            Education
+          </Typography>
+
           <Grid container spacing={3} sx={{ mt: 1 }}>
-            <Grid item xs={12} md={6}>
-              <Card sx={{ display:'flex', alignItems:'center', backgroundColor: theme.palette.tertiary.main, color: '#fff', p:2, borderRadius: 2 }}>
-                <Box sx={{ flex: '0 0 72px' }}>
-                  <Image src="/images/Hopkins.png" alt="Hopkins" width={72} height={72} style={{ borderRadius: 8 }} />
-                </Box>
-                <Box sx={{ ml: 2 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 700 }}>Johns Hopkins University</Typography>
-                  <Typography variant="body2">M.S. Data Science — AI & Machine Learning</Typography>
-                  <Typography variant="body2">GPA: 4.0 — Expected May 2027</Typography>
-                </Box>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Card sx={{ display:'flex', alignItems:'center', backgroundColor: theme.palette.tertiary.main, color: '#fff', p:2, borderRadius: 2 }}>
-                <Box sx={{ flex: '0 0 72px' }}>
-                  <Image src="/images/Ursinus.png" alt="Ursinus" width={72} height={72} style={{ borderRadius: 8 }} />
-                </Box>
-                <Box sx={{ ml: 2 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 700 }}>Ursinus College</Typography>
-                  <Typography variant="body2">B.S., Triple Major — Computer Science | Statistics | Mathematics</Typography>
-                  <Typography variant="body2">GPA: 3.99 — December 2024</Typography>
-                </Box>
-              </Card>
-            </Grid>
+            {educationData.map((edu, i) => (
+              <Grid item xs={12} md={6} key={i}>
+                <Card
+                  sx={{
+                    backgroundColor: theme.palette.tertiary.main,
+                    color: '#fff',
+                    p: 2,
+                    borderRadius: 2
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box sx={{ flex: '0 0 72px' }}>
+                      <Image
+                        src={edu.logo}
+                        alt={edu.school}
+                        width={72}
+                        height={72}
+                        style={{ borderRadius: 8 }}
+                      />
+                    </Box>
+                    <Box sx={{ ml: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                        {edu.school}
+                      </Typography>
+                      <Typography variant="body2">{edu.degree}</Typography>
+                      <Typography variant="body2">GPA: {edu.gpa}</Typography>
+                    </Box>
+                  </Box>
+
+                  {/* Dropdown for courses */}
+                  <Accordion
+                    disableGutters
+                    sx={{
+                      backgroundColor: 'transparent',
+                      mt: 1,
+                      borderTop: '1px solid rgba(255,255,255,0.2)'
+                    }}
+                  >
+                    <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+                        View Courses
+                      </Typography>
+                    </AccordionSummary>
+
+                    <AccordionDetails>
+                      <Table size="small">
+                        <TableBody>
+                          {edu.courses.map((course, idx) => (
+                            <CourseRow key={idx} course={course} />
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </AccordionDetails>
+                  </Accordion>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
         </motion.div>
+
 
         {/* ===== Skills (interactive chips) ===== */}
         <motion.div id='skills' initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariant}>
@@ -482,23 +712,69 @@ export default function Portfolio() {
                       </Box>
                     )}
 
-                    {/* ===== Download IconButton for publication ===== */}
-                    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'left' }}>
-                      <IconButton
-                        component="a"
-                        href="/documents/CS_Honors_Presentation.pdf"
-                        download
-                        sx={{
-                          color: '#fff',
-                          backgroundColor: 'rgba(255,255,255,0.1)',
-                          '&:hover': { backgroundColor: theme.palette.primary.main, color: '#fff' },
-                          borderRadius: 2,
-                          p: 1.5,
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
-                        }}
-                      >
-                        <DownloadIcon />
-                      </IconButton>
+                    {/* ===== Action Buttons (video, link, download) ===== */}
+                    <Box sx={{ mt: 2, display: 'flex', gap: 1.5 }}>
+                      {proj.video && (
+                        <Tooltip title="Watch Video" arrow>
+                          <IconButton
+                            component="a"
+                            href={proj.video}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            sx={{
+                              color: '#fff',
+                              backgroundColor: 'rgba(255,255,255,0.1)',
+                              '&:hover': { backgroundColor: theme.palette.primary.main },
+                              borderRadius: 2,
+                              p: 1.5,
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                            }}
+                          >
+                            <YouTube/>
+                          </IconButton>
+                        </Tooltip>
+                      )}
+
+                      {proj.link && (
+                        <Tooltip title="View Project" arrow>
+                          <IconButton
+                            component="a"
+                            href={proj.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            sx={{
+                              color: '#fff',
+                              backgroundColor: 'rgba(255,255,255,0.1)',
+                              '&:hover': { backgroundColor: theme.palette.primary.main },
+                              borderRadius: 2,
+                              p: 1.5,
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                            }}
+                          >
+                            <Link/>
+                          </IconButton>
+                        </Tooltip>
+                      )}
+
+                      {proj.download && (
+                        <Tooltip title="Download File" arrow>
+                          <IconButton
+                            component="a"
+                            href={proj.download}
+                            download
+                            sx={{
+                              color: '#fff',
+                              backgroundColor: 'rgba(255,255,255,0.1)',
+                              '&:hover': { backgroundColor: theme.palette.primary.main },
+                              borderRadius: 2,
+                              p: 1.5,
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                            }}
+                          >
+                            <DownloadIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
                     </Box>
                   </Card>
                 </motion.div>
@@ -510,17 +786,62 @@ export default function Portfolio() {
         {/* ===== Carousel (small, keeps flow) ===== */}
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariant}>
           <Box sx={{ mt: 4 }}>
-            <Carousel showThumbs={false} showStatus={false} infiniteLoop autoPlay interval={4500} centerMode centerSlidePercentage={80}>
+            <Carousel
+              showThumbs={false}
+              showStatus={false}
+              infiniteLoop
+              autoPlay
+              interval={4500}
+              centerMode
+              centerSlidePercentage={80}
+            >
               {carouselImages.map((img) => (
-                <Box key={img} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 1 }}>
+                <Box
+                  key={img}
+                  sx={{
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    p: 1,
+                  }}
+                >
                   <Image
                     src={`/images/${img}`}
-                    alt={img}
+                    alt={imageCaptions[img] || img}
                     width={900}
                     height={500}
-                    style={{ objectFit: 'cover', borderRadius: 12, cursor: 'pointer' }}
+                    style={{
+                      objectFit: 'cover',
+                      borderRadius: 12,
+                      cursor: 'pointer',
+                    }}
                     onClick={() => openLightbox(`/images/${img}`)}
                   />
+
+                  {imageCaptions[img] && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        bottom: 12,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        background: 'rgba(0, 0, 0, 0.55)',
+                        color: '#fff',
+                        px: 2.5,
+                        py: 0.8,
+                        borderRadius: 2,
+                        fontSize: '0.9rem',
+                        fontStyle: 'italic',
+                        textAlign: 'center',
+                        backdropFilter: 'blur(3px)',
+                        maxWidth: '85%',
+                        mb: 2
+                      }}
+                    >
+                      {imageCaptions[img]}
+                    </Box>
+                  )}
                 </Box>
               ))}
             </Carousel>
@@ -564,30 +885,105 @@ export default function Portfolio() {
           </Grid>
         </motion.div>
 
-        {/* ===== Awards & Community small section (optional) ===== */}
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariant}>
-          <Typography variant="h5" sx={{ mt: 4, color: theme.palette.primary.main, fontWeight: 700 }}>Awards & Community</Typography>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} md={6}>
-              <Card sx={{ p: 2, backgroundColor: theme.palette.tertiary.main, color: '#fff' }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>Highlights</Typography>
-                <List dense>
-                  <ListItem sx={{ pl: 0 }}>Salutatorian — Ursinus College Class of 2025</ListItem>
-                  <ListItem sx={{ pl: 0 }}>Best Data Visualization — DataFest Philly (2024)</ListItem>
-                  <ListItem sx={{ pl: 0 }}>Upsilon Pi Epsilon — Chapter President (2023)</ListItem>
-                </List>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Card sx={{ p: 2, backgroundColor: theme.palette.tertiary.main, color: '#fff' }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>Community & Leadership</Typography>
-                <List dense>
-                  <ListItem sx={{ pl: 0 }}>Inclusive Data Science Initiative — Ursinus</ListItem>
-                  <ListItem sx={{ pl: 0 }}>Phi Kappa Sigma — Academic Chair & Leadership roles</ListItem>
-                  <ListItem sx={{ pl: 0 }}>Volunteer: Leukemia & Lymphoma Society, AFSP, Special Olympics</ListItem>
-                </List>
-              </Card>
-            </Grid>
+        {/* ===== Awards & Community — Trophy Wall Style ===== */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={sectionVariant}
+        >
+          <Typography
+            variant="h5"
+            sx={{ mt: 6, color: theme.palette.primary.main, fontWeight: 700 }}
+          >
+            Awards & Community
+          </Typography>
+
+          <Grid
+            container
+            spacing={3}
+            sx={{
+              mt: 2,
+              justifyContent: 'center',
+              alignItems: 'stretch',
+            }}
+          >
+            {[
+              {
+                icon: <Trophy size={26} />,
+                title: 'Salutatorian',
+                subtitle: 'Ursinus College Class of 2025',
+              },
+              {
+                icon: <Award size={26} />,
+                title: 'Best Data Visualization',
+                subtitle: 'DataFest Philly (2024) — selected by ASA faculty',
+              },
+              {
+                icon: <Medal size={26} />,
+                title: 'Upsilon Pi Epsilon',
+                subtitle: 'International Computer Science Honors Society — President (2023)',
+              },
+              {
+                icon: <Users size={26} />,
+                title: 'Inclusive Data Science Initiative',
+                subtitle: 'Promoted mentorship & equity',
+              },
+              {
+                icon: <GraduationCap size={26} />,
+                title: 'Phi Kappa Sigma',
+                subtitle: 'Academic Chair & Executive Board',
+              },
+              {
+                icon: <Heart size={26} />,
+                title: 'Volunteer Service',
+                subtitle: 'LLS, AFSP, Special Olympics',
+              },
+            ].map((item, i) => (
+              <Grid item xs={12} sm={6} md={4} key={i}>
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0, transition: { delay: i * 0.12 } },
+                  }}
+                >
+                  <Card
+                    sx={{
+                      p: 2.5,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      justifyContent: 'space-between',
+                      height: '100%',
+                      backgroundColor: theme.palette.tertiary.main,
+                      color: '#fff',
+                      borderRadius: 3,
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                      transition: 'transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                        boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
+                        background: theme.palette.primary.main,
+                      },
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {item.icon}
+                      <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                        {item.title}
+                      </Typography>
+                    </Box>
+                    <Typography
+                      variant="body2"
+                      sx={{ mt: 1, fontSize: '0.9rem', opacity: 0.9 }}
+                    >
+                      {item.subtitle}
+                    </Typography>
+                  </Card>
+                </motion.div>
+              </Grid>
+            ))}
           </Grid>
         </motion.div>
 
@@ -631,8 +1027,13 @@ export default function Portfolio() {
                   rows={4}
                   sx={{ mb: 2, background: '#fff', borderRadius: 1 }}
                 />
-                <Button type="submit" variant="contained" sx={{ backgroundColor: theme.palette.primary.main }}>
-                  Send
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ backgroundColor: theme.palette.primary.main }}
+                  disabled={sending}
+                >
+                  {sending ? 'Sending...' : 'Send'}
                 </Button>
               </Box>
             </Card>
@@ -641,18 +1042,12 @@ export default function Portfolio() {
             {/* Snackbar notification */}
             <Snackbar
               open={snackbarOpen}
-              autoHideDuration={4000}
-              onClose={handleCloseSnackbar}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-              sx={{
-                '& .MuiPaper-root': {
-                  boxShadow: '0 4px 10px rgba(0,0,0,0.35)', // soft shadow
-                  borderRadius: 2, // optional rounding
-                }
-              }}
+              autoHideDuration={6000}
+              onClose={() => setSnackbarOpen(false)}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-              <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%', bgcolor: theme.palette.tertiary.main }}>
-                Message failed to send!
+              <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                {snackbarMessage}
               </Alert>
             </Snackbar>
           {/* ===== Gallery ===== */}
@@ -744,11 +1139,18 @@ export default function Portfolio() {
               <CloseIcon />
             </IconButton>
           </Box>
-          <Box component="form" onSubmit={(e)=>{ e.preventDefault(); closeContact(); }} sx={{ display: 'grid', gap: 2 }}>
-            <TextField label="Name" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} fullWidth />
-            <TextField label="Email" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} fullWidth />
-            <TextField label="Message" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} multiline rows={4} fullWidth />
-            <Button type="submit" variant="contained" sx={{ backgroundColor: theme.palette.primary.main }}>Send</Button>
+          <Box component="form" onSubmit={(e)=>{ closeContact(); handleSubmit(e) }} sx={{ display: 'grid', gap: 2 }}>
+            <TextField name='name' label="Name" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} fullWidth />
+            <TextField name='email' label="Email" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} fullWidth />
+            <TextField name='message' label="Message" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} multiline rows={4} fullWidth />
+            <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ backgroundColor: theme.palette.primary.main }}
+                  disabled={sending}
+                >
+                  {sending ? 'Sending...' : 'Send'}
+            </Button>
           </Box>
         </Box>
       </Modal>
