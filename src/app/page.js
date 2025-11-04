@@ -1009,13 +1009,17 @@ export default function Portfolio() {
                   label="Name"
                   fullWidth
                   variant="filled"
+                  required
                   sx={{ mb: 2, background: '#fff', borderRadius: 1 }}
                 />
                 <TextField
                   name="email"
                   label="Email"
+                  type='email'
+                  autoComplete='email'
                   fullWidth
                   variant="filled"
+                  required
                   sx={{ mb: 2, background: '#fff', borderRadius: 1 }}
                 />
                 <TextField
@@ -1024,6 +1028,7 @@ export default function Portfolio() {
                   fullWidth
                   variant="filled"
                   multiline
+                  required
                   rows={4}
                   sx={{ mb: 2, background: '#fff', borderRadius: 1 }}
                 />
@@ -1140,9 +1145,9 @@ export default function Portfolio() {
             </IconButton>
           </Box>
           <Box component="form" onSubmit={(e)=>{ closeContact(); handleSubmit(e) }} sx={{ display: 'grid', gap: 2 }}>
-            <TextField name='name' label="Name" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} fullWidth />
-            <TextField name='email' label="Email" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} fullWidth />
-            <TextField name='message' label="Message" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} multiline rows={4} fullWidth />
+            <TextField name='name' required label="Name" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} fullWidth />
+            <TextField name='email' required label="Email" type='email' autoComplete='email' variant="filled" sx={{ background: '#fff', fontWeight: 700 }} fullWidth />
+            <TextField name='message' required label="Message" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} multiline rows={4} fullWidth />
             <Button
                   type="submit"
                   variant="contained"
