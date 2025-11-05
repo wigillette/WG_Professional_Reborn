@@ -212,29 +212,42 @@ export default function Portfolio() {
   ];
 
   const HeroParallax = () => {
-    const { scrollY } = useScroll(); // MotionValue
-
-    // numeric blur 0 -> 8
+    const { scrollY } = useScroll();
     const numericBlur = useTransform(scrollY, [0, 400], [0, 8]);
-
-    // convert numeric MotionValue to string "blur(Xpx)"
     const blurStyle = useTransform(numericBlur, b => `blur(${b}px)`);
-
+    const y = useTransform(scrollY, [0, 400], [0, 100]); // lower = slower motion
     return (
       <motion.div
         style={{
-          height: '35vh',
+          height: '40vh',
           backgroundImage: 'url(/images/GradBanner.jpg)',
           backgroundSize: 'cover',
-          backgroundPosition: 'top',
+          backgroundPosition: 'center',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
-          filter: blurStyle
+          overflow: 'hidden',
+          filter: blurStyle,
         }}
       >
-        <Box sx={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.15)' }} />
+        <motion.div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'url(/images/GradBanner.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'top',
+            y, // <-- this makes the parallax happen
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(0,0,0,0.2)',
+          }}
+        />
       </motion.div>
     );
   };
@@ -1129,7 +1142,7 @@ export default function Portfolio() {
                       alt={img}
                       width={layout.cols * 200}
                       height={layout.rows * 160}
-                      onClick={() => openLightbox(idx)}
+                      onClick={() => openLightbox(`/images/${img}`)}
                       loading="lazy"
                       style={{
                         width: '100%',
