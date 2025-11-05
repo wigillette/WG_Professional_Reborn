@@ -120,8 +120,8 @@ export default function Portfolio() {
 
   // --------- Content (you can edit these) ----------
   const selectedSkills = [
-    'Python', 'RStudio', 'JavaScript', 'SQL', 'Statistical Modeling', 'Supervised Learning', 'Unsupervised Learning', 'Deep Learning', 'Digital Signal Processing', 'NLP', 'Computer Vision',
-    'Bayesian Methods', 'PowerBI'
+    'Python', 'RStudio', 'JavaScript', 'SQL', 'Statistical Modeling', 'Supervised Learning', 'Unsupervised Learning', 'Deep Learning', 'Digital Signal Processing', 'Natural Language Processing', 'Computer Vision',
+    'Bayesian Statistics', 'PowerBI', 'Tableau'
   ];
   const galleryImages = ["UPE2.JPG", "XC2.png", "Wide.jpg", "Seniors.jpg", "XC6.JPG","Little.png"];
 
@@ -367,7 +367,7 @@ export default function Portfolio() {
     'PhiKaps.png': 'Phi Kappa Sigma International Fraternity Delta Rho Chapter',
     'Regionals.JPG': 'Last 400m of the 2023 NCAA Metro Regionals held at Dream Park, Glocester, NJ'
   };
-  const toolTips={'Python': 'PyTorch, Pandas, Numpy, Scikit-learn, Statsmodels, Matplotlib, Seaborn', 'Digital Signal Processing': 'Waveforms, Fourier transform, Mel specrograms','NLP': 'Natural Language Processing', 'Statistical Modeling': 'Generalized Linear Models, Gaussian Mixture Models, Hidden Markov Models, Expectation-Maximization, Bootstrapping', 'Bayesian Methods': 'BSTS, Bayesian Networks, Naive Bayes', 'Supervised Learning':'Random Forest, Support Vector Machines, Logistic Regression, K-Nearest Neighbors','Unsupervised Learning': 'K-Means Clustering, Principal Component Analysis, DBSCAN', 'Deep Learning': 'Feedforward Neural Networks, Convolutional Neural Networks, Recurrent Neural Networks, Transfer Learning','JavaScript':'React/Redux, Bootstrap 5, Node.js', 'Computer Vision': 'Image Processing, Convolutional Neural Networks'}
+  const toolTips={'Python': 'PyTorch, Pandas, Numpy, Scikit-learn, Statsmodels, Matplotlib, Seaborn', 'Digital Signal Processing': 'Waveforms, Fourier transform, Mel specrograms','Natural Language Processing': 'Sentiment Analysis, Naive Bayes, K-gram, Bag of Words, Tokenization', 'Statistical Modeling': 'Generalized Linear Models, Gaussian Mixture Models, Hidden Markov Models, Expectation-Maximization, Bootstrapping', 'Bayesian Statistics': 'Conjugate Priors, Credible Intervals, Bayesian Structural Time Series, Bayesian Networks', 'Supervised Learning':'Random Forest, Support Vector Machines, Logistic Regression, K-Nearest Neighbors','Unsupervised Learning': 'K-Means Clustering, Principal Component Analysis, DBSCAN', 'Deep Learning': 'Feedforward Neural Networks, Convolutional Neural Networks, Recurrent Neural Networks, Transfer Learning','JavaScript':'React/Redux, Bootstrap 5, Node.js', 'Computer Vision': 'Image Processing, Convolutional Neural Networks'}
 
   // --------- Motion variants ----------
   const sectionVariant = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } };
@@ -444,7 +444,7 @@ export default function Portfolio() {
           <Box
             sx={{
               textAlign: 'center',
-              py: 4,
+              py: 1,
               px: 1,
               background: 'linear-gradient(90deg, #1976d2, #21cbf3)',
               borderRadius: 2,
@@ -452,7 +452,7 @@ export default function Portfolio() {
               boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
             }}
           >
-            <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
               Data Scientist & AI Enthusiast
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 400 }}>
