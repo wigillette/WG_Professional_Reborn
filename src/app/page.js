@@ -9,7 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Info, YouTube } from '@mui/icons-material';
 import {
   AppBar, Toolbar, Drawer, ListItemButton, ListItemText, Box, Container, Typography, Grid, Card, ButtonBase, CardContent, List, ListItem, Collapse, Fade,
-  Chip, Avatar, Divider, Fab, Modal, TextField, Button, ImageList, ImageListItem, IconButton, Snackbar, Alert, Tooltip, Table, TableBody, Accordion, AccordionDetails, AccordionSummary,  TableRow, TableCell
+  Chip, Avatar, useMediaQuery, Divider, Fab, Modal, TextField, Button, ImageList, ImageListItem, IconButton, Snackbar, Alert, Tooltip, Table, TableBody, Accordion, AccordionDetails, AccordionSummary,  TableRow, TableCell
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Link from '@mui/icons-material/Link'
@@ -136,6 +136,7 @@ export default function Portfolio() {
       ],
       images: ['CausalImpact.png'],
       download: '/documents/WG_STAT451_Project2.pdf',
+      video: 'https://www.youtube.com/watch?v=fv7SYKM3Rtc'
     },
     {
       title: 'Evaluating the Sensitivity of the Housing Market',
@@ -368,11 +369,12 @@ export default function Portfolio() {
     'Regionals.JPG': 'Last 400m of the 2023 NCAA Metro Regionals held at Dream Park, Glocester, NJ'
   };
   const toolTips={'Python': 'PyTorch, Pandas, Numpy, Scikit-learn, Statsmodels, Matplotlib, Seaborn', 'Digital Signal Processing': 'Waveforms, Fourier transform, Mel specrograms','Natural Language Processing': 'Sentiment Analysis, Naive Bayes, K-gram, Bag of Words, Tokenization', 'Statistical Modeling': 'Generalized Linear Models, Gaussian Mixture Models, Hidden Markov Models, Expectation-Maximization, Bootstrapping', 'Bayesian Statistics': 'Conjugate Priors, Credible Intervals, Bayesian Structural Time Series, Bayesian Networks', 'Supervised Learning':'Random Forest, Support Vector Machines, Logistic Regression, K-Nearest Neighbors','Unsupervised Learning': 'K-Means Clustering, Principal Component Analysis, DBSCAN', 'Deep Learning': 'Feedforward Neural Networks, Convolutional Neural Networks, Recurrent Neural Networks, Transfer Learning','JavaScript':'React/Redux, Bootstrap 5, Node.js', 'Computer Vision': 'Image Processing, Convolutional Neural Networks'}
-
+  const isMobile = useMediaQuery('(max-width:600px)');
   // --------- Motion variants ----------
   const sectionVariant = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } };
   const lightboxVariant = { hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.32 } } };
   const heroControls = useAnimation();
+  const [showAll, setShowAll] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
@@ -385,7 +387,7 @@ export default function Portfolio() {
   }, [heroControls]);
 
   return (
-    <Box sx={{ fontFamily: 'Poppins, sans-serif', backgroundColor: theme.palette.background.default, color: theme.palette.text.secondary, minHeight: '100vh' }}>
+    <Box sx={{ fontFamily: 'Poppins, sans-serif', backgroundColor: theme.palette.background.default, color: theme.palette.text.secondary, minHeight: '100vh', width: '100%' }}>
         {/* // ---------------------- Navbar ---------------------- */}
       <AppBar position="fixed" sx={{ backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', boxShadow: 'none', zIndex:1500 }}>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
@@ -791,11 +793,14 @@ export default function Portfolio() {
               showStatus={false}
               infiniteLoop
               autoPlay
-              interval={4500}
-              centerMode
-              centerSlidePercentage={80}
+              interval={isMobile ? 6500 : 4500}
+              centerMode={!isMobile}
+              centerSlidePercentage={isMobile ? 100 : 80}
+              swipeable
+              emulateTouch
+              stopOnHover={!isMobile}
             >
-              {carouselImages.map((img) => (
+              {carouselImages.map((img, idx) => (
                 <Box
                   key={img}
                   sx={{
@@ -803,7 +808,7 @@ export default function Portfolio() {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    p: 1,
+                    p: { xs: 0.5, sm: 1 },
                   }}
                 >
                   <Image
@@ -811,32 +816,42 @@ export default function Portfolio() {
                     alt={imageCaptions[img] || img}
                     width={900}
                     height={500}
+                    loading={idx === 0 ? 'eager' : 'lazy'} // prioritize first image
                     style={{
                       objectFit: 'cover',
-                      borderRadius: 12,
+                      borderRadius: isMobile ? 8 : 12,
                       cursor: 'pointer',
+                      width: '100%',
+                      height: isMobile ? '250px' : '500px',
+                      boxShadow: isMobile ? 'none' : '0px 4px 20px rgba(0,0,0,0.25)',
+                      transition: 'transform 0.3s ease',
                     }}
                     onClick={() => openLightbox(`/images/${img}`)}
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.02)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1.0)')}
                   />
 
                   {imageCaptions[img] && (
                     <Box
                       sx={{
                         position: 'absolute',
-                        bottom: 12,
+                        bottom: { xs: 6, sm: 12 },
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        background: 'rgba(0, 0, 0, 0.55)',
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0.25))',
                         color: '#fff',
-                        px: 2.5,
-                        py: 0.8,
-                        borderRadius: 2,
-                        fontSize: '0.9rem',
+                        px: { xs: 1.5, sm: 2.5 },
+                        py: { xs: 0.5, sm: 0.8 },
+                        borderRadius: { xs: 1, sm: 2 },
+                        fontSize: { xs: '0.75rem', sm: '0.9rem' },
                         fontStyle: 'italic',
                         textAlign: 'center',
-                        backdropFilter: 'blur(3px)',
-                        maxWidth: '85%',
-                        mb: 2
+                        bottom: { xs: 30, sm: 40 },
+                        backdropFilter: isMobile ? 'blur(5px)' : 'blur(3px)',
+                        width: { xs: '85%', sm: 'auto' },  // 85% width on mobile, auto for larger screens
+                        opacity: 0.9,
+                        transition: 'opacity 0.3s ease',
+                        '&:hover': { opacity: 1 },
                       }}
                     >
                       {imageCaptions[img]}
@@ -1064,54 +1079,95 @@ export default function Portfolio() {
           >
             <Typography
               variant="h5"
-              sx={{ mt: 4, mb: 2, color: theme.palette.primary.main, fontWeight: 700 }}
+              sx={{
+                mt: 4,
+                mb: 2,
+                color: theme.palette.primary.main,
+                fontWeight: 700,
+                textAlign: { xs: 'center', sm: 'left' },
+              }}
             >
               Gallery
             </Typography>
 
             <ImageList
               variant="quilted"
-              cols={4}
-              rowHeight={160}
-              gap={12}
+              cols={isMobile ? 2 : 4}
+              rowHeight={isMobile ? 120 : 160}
+              gap={isMobile ? 6 : 12}
+              sx={{
+                overflow: 'hidden',
+                borderRadius: 2,
+                mx: { xs: 0.5, sm: 0 },
+                transition: 'all 0.3s ease',
+              }}
             >
-              {galleryImages.map((img, idx) => {
-                // Mix of wide and tall images
+              {(showAll ? galleryImages : galleryImages.slice(0, isMobile ? 4 : 6)).map((img, idx) => {
                 const layout = [
-                  { cols: 2, rows: 2 }, // UPE2.JPG
-                  { cols: 1, rows: 3 }, // XC2.png
-                  { cols: 1, rows: 2 }, // Banner.JPG
-                  { cols: 2, rows: 3 }, // Seniors.jpg
-                  { cols: 1, rows: 3 },  // Little.png
-                  { cols: 1, rows: 2 }  // XC6.JPG
-                ][idx];
+                  { cols: 2, rows: 2 },
+                  { cols: 1, rows: 3 },
+                  { cols: 1, rows: 2 },
+                  { cols: 2, rows: 3 },
+                  { cols: 1, rows: 3 },
+                  { cols: 1, rows: 2 },
+                ][idx] || { cols: 1, rows: 1 };
 
                 return (
-                  <ImageListItem key={idx} cols={layout.cols} rows={layout.rows} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+                  <ImageListItem
+                    key={idx}
+                    cols={isMobile ? 1 : layout.cols}
+                    rows={isMobile ? 1 : layout.rows}
+                    sx={{
+                      borderRadius: 2,
+                      overflow: 'hidden',
+                      position: 'relative',
+                      '&:hover img': { transform: 'scale(1.05)' },
+                    }}
+                  >
                     <Image
                       src={`/images/${img}`}
                       alt={img}
-                      width={layout.cols * 200} // approximate width
-                      height={layout.rows * 160} // approximate height
-                      onClick={() => openLightbox(`/images/${img}`)}
-                      loading='lazy'
+                      width={layout.cols * 200}
+                      height={layout.rows * 160}
+                      onClick={() => openLightbox(idx)}
+                      loading="lazy"
                       style={{
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        transition: 'transform 0.3s ease',
+                        borderRadius: 12,
                       }}
                     />
                   </ImageListItem>
                 );
               })}
             </ImageList>
+
+            {/* ===== Toggle button ===== */}
+            <Box sx={{ textAlign: 'center', mt: 2 }}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setShowAll(!showAll)}
+                sx={{
+                  textTransform: 'none',
+                  color: theme.palette.primary.main,
+                  borderColor: theme.palette.primary.main,
+                  '&:hover': {
+                    backgroundColor: theme.palette.primary.main,
+                    color: '#fff',
+                  },
+                }}
+              >
+                {showAll ? 'View Less' : 'View More'}
+              </Button>
+            </Box>
           </motion.div>
         </Box>
       </Container>
       
-
-
       {/* ===================== Floating Action Buttons ===================== */}
       {/* Contact FAB (opens contact modal) */}
       <Fab color="primary" aria-label="contact" onClick={openContact}
@@ -1120,7 +1176,6 @@ export default function Portfolio() {
       </Fab>
 
       {/* Scroll-to-top mini FAB */}
-                
       <AnimatePresence>
         {showScrollTop && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}>
@@ -1144,17 +1199,72 @@ export default function Portfolio() {
               <CloseIcon />
             </IconButton>
           </Box>
-          <Box component="form" onSubmit={(e)=>{ closeContact(); handleSubmit(e) }} sx={{ display: 'grid', gap: 2 }}>
-            <TextField name='name' required label="Name" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} fullWidth />
-            <TextField name='email' required label="Email" type='email' autoComplete='email' variant="filled" sx={{ background: '#fff', fontWeight: 700 }} fullWidth />
-            <TextField name='message' required label="Message" variant="filled" sx={{ background: '#fff', fontWeight: 700 }} multiline rows={4} fullWidth />
+          <Box
+            component="form"
+            onSubmit={(e) => { closeContact(); handleSubmit(e); }}
+            sx={{
+              display: 'grid',
+              gap: { xs: 1.5, sm: 2 },           // tighter spacing on mobile
+              p: { xs: 1.5, sm: 3 },             // less padding on smaller screens
+              maxWidth: 600,
+              mx: 'auto',
+            }}
+          >
+            <TextField
+              name="name"
+              required
+              label="Name"
+              variant="filled"
+              fullWidth
+              sx={{
+                background: '#fff',
+                borderRadius: 1,
+                '& .MuiFilledInput-root': { py: { xs: 1, sm: 1.5 } }, // less vertical padding on mobile
+              }}
+            />
+            <TextField
+              name="email"
+              required
+              label="Email"
+              type="email"
+              autoComplete="email"
+              inputMode="email"
+              variant="filled"
+              fullWidth
+              sx={{
+                background: '#fff',
+                borderRadius: 1,
+                '& .MuiFilledInput-root': { py: { xs: 1, sm: 1.5 } },
+              }}
+            />
+            <TextField
+              name="message"
+              required
+              label="Message"
+              variant="filled"
+              multiline
+              rows={4}
+              fullWidth
+              sx={{
+                background: '#fff',
+                borderRadius: 1,
+                '& .MuiFilledInput-root': { py: { xs: 1, sm: 1.5 } },
+              }}
+            />
             <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{ backgroundColor: theme.palette.primary.main }}
-                  disabled={sending}
-                >
-                  {sending ? 'Sending...' : 'Send'}
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                fontWeight: 600,
+                py: { xs: 1.2, sm: 1.4 },
+                fontSize: { xs: '0.9rem', sm: '1rem' },
+                borderRadius: 2,
+              }}
+              disabled={sending}
+            >
+              {sending ? 'Sending…' : 'Send'}
             </Button>
           </Box>
         </Box>
