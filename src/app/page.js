@@ -219,7 +219,6 @@ export default function Portfolio() {
     return (
       <motion.div
         style={{
-          height: '40vh',
           backgroundImage: 'url(/images/GradBanner.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -231,23 +230,31 @@ export default function Portfolio() {
           filter: blurStyle,
         }}
       >
-        <motion.div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'url(/images/GradBanner.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'top',
-            y, // <-- this makes the parallax happen
-          }}
-        />
         <Box
           sx={{
-            position: 'absolute',
-            inset: 0,
-            background: 'rgba(0,0,0,0.2)',
+            height: { xs: '25vh', sm: '35vh', md: '40vh' },
+            width: '100%',
+            position: 'relative',
           }}
-        />
+        >
+          <motion.div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: 'url(/images/GradBanner.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'top',
+              y, // parallax motion
+            }}
+          />
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(0,0,0,0.2)',
+            }}
+          />
+        </Box>
       </motion.div>
     );
   };
@@ -391,6 +398,7 @@ export default function Portfolio() {
   const [showAll, setShowAll] = useState(false);
   const visibleImages = showAll ? galleryImages : galleryImages.slice(0, INITIAL_COUNT);
   const canToggle = galleryImages.length > INITIAL_COUNT
+  const [aboutMeExpanded, setAboutMeExpanded] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -463,18 +471,39 @@ export default function Portfolio() {
           <Box
             sx={{
               textAlign: 'center',
-              py: 1,
-              px: 1,
+              py: 2,
+              px: 2,
               background: 'linear-gradient(90deg, #1976d2, #21cbf3)',
               borderRadius: 2,
               color: '#fff',
               boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+              [theme => theme.breakpoints.down('sm')]: {
+                py: 0.5,
+                px: 0.5,
+              },
             }}
           >
-            <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                mb: 1,
+                [theme => theme.breakpoints.down('sm')]: {
+                  fontSize: '0.5rem',
+                },
+              }}
+            >
               Data Scientist & AI Enthusiast
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 400 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 400,
+                [theme => theme.breakpoints.down('sm')]: {
+                  fontSize: '0.3rem',
+                },
+              }}
+            >
               Turning data into actionable insights and intelligent solutions to drive digital transformation across industries
             </Typography>
           </Box>
@@ -507,16 +536,39 @@ export default function Portfolio() {
             {/* Right column: About Me card */}
             <Grid item xs={12} md={9}>
               <Card sx={{ backgroundColor: theme.palette.tertiary.main, color: '#fff', p: 2 }}>
-                <Typography variant="h6" sx={{ color: theme.palette.primary.main, fontWeight: 700 }}>About Me</Typography>
+                <Typography variant="h6" sx={{ color: theme.palette.primary.main, fontWeight: 700 }}>
+                  About Me
+                </Typography>
+                {/* Always show the first paragraph */}
                 <Typography paragraph sx={{ mt: 1 }}>
                   I am a data scientist with proficiency in Python, R, and full-stack development, focused on transforming complex data into actionable insights and intuitive applications. I graduated from Ursinus College with a triple major in Computer Science, Statistics, and Mathematics (GPA: 3.99), balancing academics with roles as a varsity athlete, fraternity academic chair, and lead tutor.
                 </Typography>
-                <Typography paragraph>
-                  As a Technical Delivery Analyst in the Public Sector, I create data-driven recommendations, optimize workforce management, and produce business intelligence reports. My foundation in analysis and software development was strengthened through projects like a Bayesian regression housing market study and leading the development of a full-stack degree planner app as Scrum Master.
-                </Typography>
-                <Typography paragraph>
-                  Currently, I am advancing my expertise through a Master’s in Data Science at Johns Hopkins University, specializing in AI and machine learning, with plans to progress to an applied statistics doctoral program. I aim to harness data science and intelligent automation to craft innovative solutions and drive digital transformation across industries.
-                </Typography>
+                {/* Conditionally show more content */}
+                {(!isMobile || aboutMeExpanded) && (
+                  <>
+                    <Typography paragraph>
+                      As a Technical Delivery Analyst in the Public Sector, I create data-driven recommendations, optimize workforce management, and produce business intelligence reports. My foundation in analysis and software development was strengthened through projects like a Bayesian regression housing market study and leading the development of a full-stack degree planner app as Scrum Master.
+                    </Typography>
+                    <Typography paragraph>
+                      Currently, I am advancing my expertise through a Master’s in Data Science at Johns Hopkins University, specializing in AI and machine learning, with plans to progress to an applied statistics doctoral program. I aim to harness data science and intelligent automation to craft innovative solutions and drive digital transformation across industries.
+                    </Typography>
+                  </>
+                )}
+                {/* Read more / less button visible only on mobile */}
+                {isMobile && (
+                  <Button
+                    size="small"
+                    onClick={() => setAboutMeExpanded(prev => !prev)}
+                    sx={{
+                      mt: 1,
+                      color: theme.palette.primary.light,
+                      textTransform: 'none',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {aboutMeExpanded ? 'Read less' : 'Read more'}
+                  </Button>
+                )}
               </Card>
               {/* Resume download */}
               <Button
