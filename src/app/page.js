@@ -16,7 +16,7 @@ import Link from '@mui/icons-material/Link'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import Description from '@mui/icons-material/Description'
-import { Award, Medal, GraduationCap, Trophy, Users, Heart } from "lucide-react";
+import { Award, Medal, GraduationCap, Trophy, Users, Heart, Computer, Skull, ChartBar, Laptop } from "lucide-react";
 import { useTheme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { motion, AnimatePresence, useAnimation, useTransform, useScroll } from 'framer-motion';
@@ -353,7 +353,7 @@ export default function Portfolio() {
       gpa: '3.99 — December 2024',
       courses: [
         { id: 'MATH-442', name: 'Mathematical Statistics', description: 'The mathematical background of modern statistics, including the development of sampling distributions, the theory and application of estimation, tests of hypotheses. This course will satisfy the College requirement for a capstone experience in the major.' },
-        { id: 'STAT-443', name: 'Statistical Modeling', description: 'This course will delve into the mathematical and theoretical underpinnings of linear regression, Analysis of Variance (ANOVA), non-parametric statistics and Bayesian methods for statistical inference. This course will satisfy the college requirement for a capstone experience in the major.' },
+        { id: 'STAT-443W', name: 'Statistical Modeling', description: 'This course will delve into the mathematical and theoretical underpinnings of linear regression, Analysis of Variance (ANOVA), non-parametric statistics and Bayesian methods for statistical inference. This course will satisfy the college requirement for a capstone experience in the major.' },
         { id: 'MATH-311W', name: 'Real Analysis', description: 'An introduction to the real number system and set operations; theoretical treatment of supremum, infimum, countability, sequences, limits, continuity, and differentiability. Additional topics may include series, structure of point sets and abstract metric spaces. Emphasis on writing mathematical proofs.' },
         { id: 'STAT-342', name: 'Applied Regression Models', description: 'A study of regression models. This course will begin by reviewing simple linear regression and progress to more general modeling approaches including multiple regression models and generalized linear models. Models, inferences, diagnostics, and remedial measures for dealing with invalid assumptions will be examined.' },
         { id: 'CS-377', name: 'Database Design', description: 'The concepts involved in designing and using a database management system. Logical and physical database design. Entity-Relational Modeling. Various types of database structures, manipulations of a database structure through applications, query techniques, and programming in a database language.' },
@@ -386,8 +386,12 @@ export default function Portfolio() {
   // --------- Motion variants ----------
   const sectionVariant = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } };
   const lightboxVariant = { hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.32 } } };
+  const INITIAL_COUNT = isMobile ? 4 : 6
   const heroControls = useAnimation();
   const [showAll, setShowAll] = useState(false);
+  const visibleImages = showAll ? galleryImages : galleryImages.slice(0, INITIAL_COUNT);
+  const canToggle = galleryImages.length > INITIAL_COUNT
+
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
@@ -435,7 +439,7 @@ export default function Portfolio() {
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
+      <Drawer anchor="right" open={drawerOpen} PaperProps={{sx: {bgcolor: theme.palette.secondary.main,color: theme.palette.secondary.contrastText,width: 220}}} onClose={toggleDrawer}>
         <Box sx={{ width: 220, p: 2 }}>
           {['Summary','About','Projects','Experience','Contact'].map(section => (
             <ListItemButton key={section} onClick={() => { scrollToSection(section.toLowerCase()); setDrawerOpen(false); }}>
@@ -483,11 +487,11 @@ export default function Portfolio() {
             {/* Left column: Avatar + social buttons + resume */}
             <Grid item xs={12} md={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
               <Avatar src="/images/Headshot.jpg" alt="Headshot"
-                sx={{ width: 280, height: 280, border: `3px solid ${theme.palette.primary.main}` }}
+                sx={{ width: 280, height: 280, mr:{md:3}, border: `3px solid ${theme.palette.primary.main}` }}
               />
               
               {/* Social media buttons */}
-              <Box sx={{ display: 'flex', gap: 1 }}>
+              <Box sx={{ display: 'flex', gap: 1, mr:{md:3} }}>
                 <IconButton component="a" href="https://www.linkedin.com/in/williamcgillette" target="_blank" color="primary">
                   <LinkedInIcon />
                 </IconButton>
@@ -672,7 +676,7 @@ export default function Portfolio() {
                 xs={12}
                 md={6}
                 key={proj.title}
-                sx={{ transform: idx % 2 ? 'translateY(18px)' : 'translateY(0px)' }}
+                sx={{ transform: { xs: 'none', md: idx % 2 ? 'translateY(18px)' : 'translateY(0px)' }}}
               >
                 <motion.div whileHover={{ y: -6, boxShadow: '0 8px 30px rgba(0,0,0,0.35)' }} transition={{ duration: 0.25 }}>
                   <Card
@@ -888,16 +892,33 @@ export default function Portfolio() {
           <Typography variant="h5" sx={{ mt: 2, color: theme.palette.primary.main, fontWeight: 700 }}>Experience</Typography>
           <Grid container spacing={3} sx={{ mt: 1 }}>
             {experiences.map((exp, idx) => (
-              <Grid item xs={12} md={4} key={exp.role} sx={{ transform: idx % 2 ? 'translateY(18px)' : 'translateY(0px)' }}>
+              <Grid
+                item
+                xs={12}
+                md={4}
+                key={exp.role}
+                sx={{
+                  transform: { xs: 'none', md: idx % 2 ? 'translateY(18px)' : 'translateY(0px)' },
+                }}
+              >
                 <motion.div whileHover={{ y: -6, boxShadow: '0 8px 30px rgba(0,0,0,0.35)' }} transition={{ duration: 0.25 }}>
-                  <Card ref={el => experienceRefs.current[idx] = el} sx={{ minHeight: experienceHeight || 'auto', p: 2, backgroundColor: theme.palette.tertiary.main, color: '#fff', borderRadius: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                  <Card
+                    ref={el => experienceRefs.current[idx] = el}
+                    sx={{
+                      p: 2,
+                      backgroundColor: theme.palette.tertiary.main,
+                      color: '#fff',
+                      borderRadius: 2,
+                      minHeight: { xs: 'auto', md: experienceHeight || 'auto' },
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 }, mb: 1, p: { xs: 1.5, sm: 2 } }}>
                       <Box sx={{ flex: '0 0 56px' }}>
                         {/* show first logo if exists */}
                         {exp.logos?.[0] && <Image src={`/images/${exp.logos[0]}`} alt={exp.company} width={56} height={56} style={{ borderRadius: 8 }} />}
                       </Box>
                       <Box sx={{ flex: 1 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 700 }}>{exp.role}</Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 700, fontSize: { xs: '1rem', sm: '1.1rem' } }}>{exp.role}</Typography>
                         <Typography variant="subtitle2">{exp.company}</Typography>
                         <Typography variant="body2" sx={{ mt: 0.5 }}>{exp.dates}</Typography>
                       </Box>
@@ -929,7 +950,7 @@ export default function Portfolio() {
 
           <Grid
             container
-            spacing={3}
+            spacing={{ xs: 1.5, sm: 2, md: 3 }}
             sx={{
               mt: 2,
               justifyContent: 'center',
@@ -938,28 +959,28 @@ export default function Portfolio() {
           >
             {[
               {
-                icon: <Trophy size={26} />,
+                icon: <GraduationCap size={26} />,
                 title: 'Salutatorian',
                 subtitle: 'Ursinus College Class of 2025',
               },
               {
-                icon: <Award size={26} />,
+                icon: <ChartBar size={26} />,
                 title: 'Best Data Visualization',
                 subtitle: 'DataFest Philly (2024) — selected by ASA faculty',
               },
               {
-                icon: <Medal size={26} />,
+                icon: <Laptop size={26} />,
                 title: 'Upsilon Pi Epsilon',
-                subtitle: 'International Computer Science Honors Society — President (2023)',
+                subtitle: 'Computing Sciences Honor Society President',
               },
               {
                 icon: <Users size={26} />,
                 title: 'Inclusive Data Science Initiative',
-                subtitle: 'Promoted mentorship & equity',
+                subtitle: 'Student-led data science research cohort',
               },
               {
-                icon: <GraduationCap size={26} />,
-                title: 'Phi Kappa Sigma',
+                icon: <Skull size={26} />,
+                title: 'Phi Kappa Sigma Fraternity',
                 subtitle: 'Academic Chair & Executive Board',
               },
               {
@@ -1083,6 +1104,12 @@ export default function Portfolio() {
                 {snackbarMessage}
               </Alert>
             </Snackbar>
+          {/* ===== Divider (skills -> research) ===== */}
+          <Box sx={{ width: '100%', mt: 5 }}>
+            <svg viewBox="0 0 100 10" preserveAspectRatio="none" style={{ width: '100%', height: 36 }}>
+              <path d="M0 0 C30 10 70 0 100 10 L100 0 L0 0 Z" fill={theme.palette.primary.main} />
+            </svg>
+          </Box>
           {/* ===== Gallery ===== */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1115,7 +1142,7 @@ export default function Portfolio() {
                 transition: 'all 0.3s ease',
               }}
             >
-              {(showAll ? galleryImages : galleryImages.slice(0, isMobile ? 4 : 6)).map((img, idx) => {
+              {visibleImages.map((img, idx) => {
                 const layout = [
                   { cols: 2, rows: 2 },
                   { cols: 1, rows: 3 },
@@ -1159,24 +1186,26 @@ export default function Portfolio() {
             </ImageList>
 
             {/* ===== Toggle button ===== */}
-            <Box sx={{ textAlign: 'center', mt: 2 }}>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => setShowAll(!showAll)}
-                sx={{
-                  textTransform: 'none',
-                  color: theme.palette.primary.main,
-                  borderColor: theme.palette.primary.main,
-                  '&:hover': {
-                    backgroundColor: theme.palette.primary.main,
-                    color: '#fff',
-                  },
-                }}
-              >
-                {showAll ? 'View Less' : 'View More'}
-              </Button>
-            </Box>
+            {canToggle && (
+              <Box sx={{ textAlign: 'center', mt: 2 }}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => setShowAll(!showAll)}
+                  sx={{
+                    textTransform: 'none',
+                    color: theme.palette.primary.main,
+                    borderColor: theme.palette.primary.main,
+                    '&:hover': {
+                      backgroundColor: theme.palette.primary.main,
+                      color: '#fff',
+                    },
+                  }}
+                >
+                  {showAll ? 'View Less' : 'View More'}
+                </Button>
+              </Box>
+            )}
           </motion.div>
         </Box>
       </Container>
