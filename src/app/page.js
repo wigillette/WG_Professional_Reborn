@@ -419,7 +419,7 @@ export default function Portfolio() {
       color: { value: "#ffffff" },
       links: { enable: true, color: "#ffffff", distance: 150, opacity: 0.5, width: 1 },
       move: { enable: true, speed: 4, direction: "none", random: false, straight: false, outModes: { default: "bounce" } },
-      number: { value: 60, density: { enable: false, area: 1200 } },
+      number: { value: 60, density: { enable: true, area: 1600 } },
       opacity: { value: 0.5 },
       shape: { type: "circle" },
       size: { value: { min: 1, max: 5 } },
@@ -513,14 +513,17 @@ export default function Portfolio() {
           <Box
             sx={{
               position: 'relative',
+              mx: 'auto', // centers horizontally
               width: '100%',
-              overflow: 'hidden', // prevent canvas from spilling
+              maxWidth: '100vw', // prevents it from exceeding the screen
+              aspectRatio: { xs: '5 / 3', md: '32 / 3' },
+              overflow: 'hidden',
               background: 'linear-gradient(90deg, #1976d2, #21cbf3)',
               borderRadius: 2,
               color: '#fff',
               textAlign: 'center',
-              py: 2,
-              px: 2,
+              boxSizing: 'border-box',
+              p: 2,
             }}
           >
             {/* Layer 1: Particles */}
