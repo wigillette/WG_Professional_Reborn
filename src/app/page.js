@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
 import GithubIcon from '@mui/icons-material/GitHub';
@@ -25,7 +25,9 @@ import Image from 'next/image';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import emailjs from '@emailjs/browser';
-
+import { loadSlim } from "@tsparticles/slim"
+import { loadFull } from 'tsparticles';
+import Particles, {initParticlesEngine} from '@tsparticles/react';
 /**
  * Portfolio — upgraded, interactive page
  * - Parallax hero (20vh)
@@ -399,7 +401,47 @@ export default function Portfolio() {
   const visibleImages = showAll ? galleryImages : galleryImages.slice(0, INITIAL_COUNT);
   const canToggle = galleryImages.length > INITIAL_COUNT
   const [aboutMeExpanded, setAboutMeExpanded] = useState(false);
+  const [particlesInit, setParticlesInit] = useState(false);
+  const particlesOptions = useMemo(() => ({
+    fullScreen: { enable: false }, // stays constrained
+    fpsLimit: 120,
+    interactivity: {
+      events: {
+        onClick: { enable: true, mode: "push" },
+        onHover: { enable: true, mode: "repulse" },
+      },
+      modes: {
+        push: { quantity: 4 },
+        repulse: { distance: 200, duration: 0.4 },
+      },
+    },
+    particles: {
+      color: { value: "#ffffff" },
+      links: { enable: true, color: "#ffffff", distance: 150, opacity: 0.5, width: 1 },
+      move: { enable: true, speed: 4, direction: "none", random: false, straight: false, outModes: { default: "bounce" } },
+      number: { value: 60, density: { enable: false, area: 1200 } },
+      opacity: { value: 0.5 },
+      shape: { type: "circle" },
+      size: { value: { min: 1, max: 5 } },
+    },
+    detectRetina: true,
+  }), []);
 
+
+
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
+      // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+      // starting from v2 you can add only the features you need reducing the bundle size
+      //await loadAll(engine);
+      //await loadFull(engine);
+      await loadSlim(engine);
+      //await loadBasic(engine);
+    }).then(() => {
+      setParticlesInit(true);
+    });
+  }, []);
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
@@ -470,42 +512,41 @@ export default function Portfolio() {
         >
           <Box
             sx={{
-              textAlign: 'center',
-              py: 2,
-              px: 2,
+              position: 'relative',
+              width: '100%',
+              overflow: 'hidden', // prevent canvas from spilling
               background: 'linear-gradient(90deg, #1976d2, #21cbf3)',
               borderRadius: 2,
               color: '#fff',
-              boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
-              [theme => theme.breakpoints.down('sm')]: {
-                py: 0.5,
-                px: 0.5,
-              },
+              textAlign: 'center',
+              py: 2,
+              px: 2,
             }}
           >
-            <Typography
-              variant="h5"
+            {/* Layer 1: Particles */}
+            {particlesInit && <Box
               sx={{
-                fontWeight: 700,
-                mb: 1,
-                [theme => theme.breakpoints.down('sm')]: {
-                  fontSize: '0.5rem',
-                },
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                zIndex: 0, // behind text
               }}
             >
-              Data Scientist & AI Enthusiast
-            </Typography>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 400,
-                [theme => theme.breakpoints.down('sm')]: {
-                  fontSize: '0.3rem',
-                },
-              }}
-            >
-              Turning data into actionable insights and intelligent solutions to drive digital transformation across industries
-            </Typography>
+              <Particles id="tsparticles" options={particlesOptions} />
+            </Box>}
+
+            {/* Layer 2: Text */}
+            <Box sx={{ position: 'relative', zIndex: 1 }}>
+              <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+                Data Scientist & AI Enthusiast
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 400 }}>
+                Turning data into actionable insights and intelligent solutions to drive
+                digital transformation across industries
+              </Typography>
+            </Box>
           </Box>
         </motion.div>
 
