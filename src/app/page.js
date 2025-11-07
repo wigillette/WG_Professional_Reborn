@@ -419,7 +419,7 @@ export default function Portfolio() {
       color: { value: "#ffffff" },
       links: { enable: true, color: "#ffffff", distance: 150, opacity: 0.5, width: 1 },
       move: { enable: true, speed: 4, direction: "none", random: false, straight: false, outModes: { default: "bounce" } },
-      number: { value: 60, density: { enable: true, area: 1600 } },
+      number: { value: 120, density: { enable: true, area: 800 } },
       opacity: { value: 0.5 },
       shape: { type: "circle" },
       size: { value: { min: 1, max: 5 } },
@@ -513,44 +513,74 @@ export default function Portfolio() {
           <Box
             sx={{
               position: 'relative',
-              mx: 'auto', // centers horizontally
+              mx: 'auto',
               width: '100%',
-              maxWidth: '100vw', // prevents it from exceeding the screen
-              aspectRatio: { xs: '5 / 3', md: '32 / 3' },
+              maxWidth: '100vw',
+              aspectRatio: { xs: '13 / 3', md: '32 / 3' },
               overflow: 'hidden',
               background: 'linear-gradient(90deg, #1976d2, #21cbf3)',
               borderRadius: 2,
               color: '#fff',
               textAlign: 'center',
               boxSizing: 'border-box',
-              p: 2,
+              p: { xs: 1.5, md: 3 },
             }}
           >
             {/* Layer 1: Particles */}
-            {particlesInit && <Box
-              sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                zIndex: 0, // behind text
-              }}
-            >
-              <Particles id="tsparticles" options={particlesOptions} />
-            </Box>}
+            {particlesInit && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  zIndex: 0,
+                }}
+              >
+                <Particles id="tsparticles" options={particlesOptions} />
+              </Box>
+            )}
 
             {/* Layer 2: Text */}
-            <Box sx={{ position: 'relative', zIndex: 1 }}>
-              <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+            <Box
+              sx={{
+                position: 'relative',
+                zIndex: 1,
+                px: { xs: 1, md: 2 }, // tighter padding so text spans wider
+                maxWidth: '90%',      // optional: keeps it visually centered without edge crowding
+                mx: 'auto',
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: 'clamp(1rem, 3vw, 1.8rem)', // min 1rem (mobile), fluid up to 2.5rem (desktop)
+                  lineHeight: 1.1,
+                  whiteSpace: 'normal',
+                  wordBreak: 'break-word',
+                }}
+              >
                 Data Scientist & AI Enthusiast
               </Typography>
-              <Typography variant="h6" sx={{ fontWeight: 400 }}>
+
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 400,
+                  fontSize: 'clamp(0.8rem, 1.5vw, 1.6rem)', // smaller but still fluid
+                  lineHeight: 1.25,
+                  whiteSpace: 'normal',
+                  wordBreak: 'break-word',
+                }}
+              >
                 Turning data into actionable insights and intelligent solutions to drive
-                digital transformation across industries
+                digital transformation
               </Typography>
             </Box>
           </Box>
+
         </motion.div>
 
         {/* ===== About Me (avatar left) ===== */}
