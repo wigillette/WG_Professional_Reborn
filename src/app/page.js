@@ -8,7 +8,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Info, YouTube } from '@mui/icons-material';
 import {
-  AppBar, Toolbar, Drawer, ListItemButton, ListItemText, Box, Container, Typography, Grid, Card, ButtonBase, CardContent, List, ListItem, Collapse, Fade,
+  AppBar, Toolbar, Drawer, ListItemButton, ListItemText, Box, Container, Typography, Grid, Card, ButtonBase, CardContent, List, ListItem, Collapse, Fade, Stack,
   Chip, Avatar, useMediaQuery, Divider, Fab, Modal, TextField, Button, ImageList, ImageListItem, IconButton, Snackbar, Alert, Tooltip, Table, TableBody, Accordion, AccordionDetails, AccordionSummary,  TableRow, TableCell
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -119,6 +119,21 @@ export default function Portfolio() {
     return () => clearTimeout(t);
   }, []);
 
+  const sectionVariant = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.15,
+      },
+    },
+  };
+
+  const cardVariant = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  };
   // --------- Content (you can edit these) ----------
   const selectedSkills = [
     'Python', 'RStudio', 'JavaScript', 'SQL', 'Statistical Modeling', 'Supervised Learning', 'Unsupervised Learning', 'Deep Learning', 'Digital Signal Processing', 'Natural Language Processing', 'Computer Vision',
@@ -129,7 +144,7 @@ export default function Portfolio() {
   const researchProjects = [
     {
       title: 'Physical Activity During the COVID-19 Pandemic',
-      tech: 'RStudio · Causal Inference · BSTS Models',
+      tech: 'RStudio,Causal Inference,BSTS Models',
       bullets: [
         'Causal impact analysis using IHME data and Bayesian Structural Time Series models',
         'Compared elderly and young adult women in CA & FL; accounted for stringency indices and DALYs',
@@ -141,7 +156,7 @@ export default function Portfolio() {
     },
     {
       title: 'Evaluating the Sensitivity of the Housing Market',
-      tech: 'RStudio · Bayesian Regression · Macroeconomics',
+      tech: 'RStudio,Bayesian Regression,Macroeconomics',
       bullets: [
         'Identified macroeconomic drivers of housing prices and their stability during crises',
         'Applied Bayesian regression with LOO cross-validation and residual diagnostics',
@@ -153,7 +168,7 @@ export default function Portfolio() {
     },
     {
       title: 'Ursinus College Degree Builder',
-      tech: 'React/Redux · SQLite · Node.js',
+      tech: 'React/Redux,SQLite,Node.js',
       bullets: [
         'Led Agile SDLC as Scrum Master; requirements, UAT, documentation, and deployment',
         'Built full-stack React app with SQLite backend for academic planning',
@@ -165,7 +180,7 @@ export default function Portfolio() {
     },
     {
       title: 'Large Scale Audio Version Identification',
-      tech: 'PyTorch · Deep Learning · Digital Signal Processing',
+      tech: 'PyTorch,Deep Learning,Digital Signal Processing',
       bullets: [
         'Engineered self-similarity matrices from Da-TACOS for CNN input',
         'Built and evaluated CNNs for audio version/cover identification',
@@ -392,7 +407,6 @@ export default function Portfolio() {
   const toolTips={'Python': 'PyTorch, Pandas, Numpy, Scikit-learn, Statsmodels, Matplotlib, Seaborn', 'Digital Signal Processing': 'Waveforms, Fourier transform, Mel specrograms','Natural Language Processing': 'Sentiment Analysis, Naive Bayes, K-gram, Bag of Words, Tokenization', 'Statistical Modeling': 'Generalized Linear Models, Gaussian Mixture Models, Hidden Markov Models, Expectation-Maximization, Bootstrapping', 'Bayesian Statistics': 'Conjugate Priors, Credible Intervals, Bayesian Structural Time Series, Bayesian Networks', 'Supervised Learning':'Random Forest, Support Vector Machines, Logistic Regression, K-Nearest Neighbors','Unsupervised Learning': 'K-Means Clustering, Principal Component Analysis, DBSCAN', 'Deep Learning': 'Feedforward Neural Networks, Convolutional Neural Networks, Recurrent Neural Networks, Transfer Learning','JavaScript':'React/Redux, Bootstrap 5, Node.js', 'Computer Vision': 'Image Processing, Convolutional Neural Networks'}
   const isMobile = useMediaQuery('(max-width:600px)');
   // --------- Motion variants ----------
-  const sectionVariant = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } };
   const lightboxVariant = { hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.32 } } };
   const INITIAL_COUNT = isMobile ? 4 : 6
   const heroControls = useAnimation();
@@ -790,74 +804,159 @@ export default function Portfolio() {
         </Box>
 
         {/* ===== Research & Projects (staggered + ImageList inside cards) ===== */}
-        <motion.div id='projects' initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariant}>
-          <Typography variant="h5" sx={{ mt: 4, color: theme.palette.primary.main, fontWeight: 700 }}>
+        <motion.div
+          id="projects"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={sectionVariant}
+        >
+          <Typography
+            variant="h5"
+            sx={{
+              mt: 4,
+              color: theme.palette.primary.main,
+              fontWeight: 700,
+              mb: 2,
+              textAlign: 'center',
+            }}
+          >
             Independent Research & Projects
           </Typography>
-          <Grid container spacing={3} sx={{ mt: 1 }}>
+
+          <Grid
+            container
+            spacing={3}
+            component={motion.div}
+            variants={sectionVariant}
+          >
             {researchProjects.map((proj, idx) => (
               <Grid
                 item
                 xs={12}
                 md={6}
                 key={proj.title}
-                sx={{ transform: { xs: 'none', md: idx % 2 ? 'translateY(18px)' : 'translateY(0px)' }}}
+                sx={{
+                  // stagger one column vertically without overlap
+                  mt: { xs: 0, md: idx % 2 ? 6 : 0 },
+                }}
+                component={motion.div}
+                variants={cardVariant}
               >
-                <motion.div whileHover={{ y: -6, boxShadow: '0 8px 30px rgba(0,0,0,0.35)' }} transition={{ duration: 0.25 }}>
+                <motion.div
+                  whileHover={{
+                    y: -6,
+                    scale: 1.015,
+                  }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  style={{ position: 'relative', zIndex: 1 }}
+                >
                   <Card
-                    ref={el => researchRefs.current[idx] = el}
-                      sx={{
-                          minHeight: 'auto',
-                          backgroundColor: theme.palette.tertiary.main,
-                          color: '#fff',
-                          p: 2,
-                          borderRadius: 2,
-                          boxShadow: '0 4px 12px rgba(0,0,0,0.25)', // subtle shadow
-                          transition: 'transform 0.25s ease, box-shadow 0.25s ease',
-                          '&:hover': {
-                            transform: 'translateY(-6px)',
-                            boxShadow: '0 12px 28px rgba(0,0,0,0.35)', // stronger shadow on hover
-                          }
-                        }}
+                    ref={(el) => (researchRefs.current[idx] = el)}
+                    sx={{
+                      position: 'relative',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%',
+                      background: `linear-gradient(135deg, ${theme.palette.tertiary.main}, ${theme.palette.secondary.main})`,
+                      color: '#fff',
+                      p: 2.5,
+                      borderRadius: 2,
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                      overflow: 'hidden',
+                      transition: 'box-shadow 0.25s ease, transform 0.25s ease',
+                      '&:hover': {
+                        boxShadow: '0 12px 28px rgba(0,0,0,0.35)',
+                      },
+                      '&:hover:before': {
+                        opacity: 1,
+                      },
+                    }}
                   >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 700 }}>{proj.title}</Typography>
-                        <Typography variant="body2" sx={{ fontStyle: 'italic', mb: 1 }}>{proj.tech}</Typography>
-                      </Box>
-                    </Box>
+                    {/* === Title & Tech Chips === */}
+                    <Box sx={{ flex: 1, zIndex: 1 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                        {proj.title}
+                      </Typography>
 
-                    <List dense sx={{ mt: 1 }}>
-                      {proj.bullets.map((b, i) => <ListItem key={i} sx={{ pl: 0 }}>{b}</ListItem>)}
-                    </List>
-
-                    {proj.images && (
-                      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        {proj.images.map((img, i) => (
-                          <Box
-                            key={i}
-                            sx={{ width: '100%', position: 'relative', cursor: 'pointer' }}
-                            onClick={() => openLightbox(`/images/${img}`)}
-                          >
-                            <Image
-                              src={`/images/${img}`}
-                              alt={img}
-                              width={1200} // adjust to image resolution
-                              height={600} // adjust for aspect ratio
-                              style={{
-                                width: '100%',
-                                height: 'auto',
-                                objectFit: 'cover',
-                                borderRadius: 8
+                      {proj.tech && (
+                        <Stack
+                          direction="row"
+                          flexWrap="wrap"
+                          spacing={1}
+                          sx={{ mt: 1, mb: 1 }}
+                        >
+                          {proj.tech.split(',').map((techItem) => (
+                            <Chip
+                              key={techItem.trim()}
+                              label={techItem.trim()}
+                              size="small"
+                              sx={{
+                                backgroundColor: 'rgba(255,255,255,0.15)',
+                                color: '#fff',
+                                fontSize: '0.75rem',
+                                fontWeight: 400,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.02em',
                               }}
                             />
-                          </Box>
-                        ))}
-                      </Box>
-                    )}
+                          ))}
+                        </Stack>
+                      )}
 
-                    {/* ===== Action Buttons (video, link, download) ===== */}
-                    <Box sx={{ mt: 2, display: 'flex', gap: 1.5 }}>
+                      {/* === Project Details === */}
+                      <List dense sx={{ mt: 1, pl: 0 }}>
+                        {proj.bullets.map((b, i) => (
+                          <ListItem key={i} sx={{ pl: 0 }}>
+                            <Typography variant="body2">{b}</Typography>
+                          </ListItem>
+                        ))}
+                      </List>
+
+                      {/* === Images === */}
+                      {proj.images && (
+                        <Box
+                          sx={{
+                            mt: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                          }}
+                        >
+                          {proj.images.map((img, i) => (
+                            <Box
+                              key={i}
+                              sx={{
+                                position: 'relative',
+                                aspectRatio: '16 / 9',
+                                borderRadius: 2,
+                                overflow: 'hidden',
+                                cursor: 'pointer',
+                              }}
+                              onClick={() => openLightbox(`/images/${img}`)}
+                            >
+                              <Image
+                                src={`/images/${img}`}
+                                alt={proj.title}
+                                fill
+                                sizes="(max-width: 600px) 100vw, 50vw"
+                                style={{ objectFit: 'cover' }}
+                              />
+                            </Box>
+                          ))}
+                        </Box>
+                      )}
+                    </Box>
+
+                    {/* === Action Buttons === */}
+                    <Box
+                      sx={{
+                        mt: 2,
+                        display: 'flex',
+                        gap: 1.5,
+                        flexWrap: 'wrap',
+                      }}
+                    >
                       {proj.video && (
                         <Tooltip title="Watch Video" arrow>
                           <IconButton
@@ -870,11 +969,11 @@ export default function Portfolio() {
                               backgroundColor: 'rgba(255,255,255,0.1)',
                               '&:hover': { backgroundColor: theme.palette.primary.main },
                               borderRadius: 2,
-                              p: 1.5,
-                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                              p: 1.25,
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                             }}
                           >
-                            <YouTube/>
+                            <YouTube />
                           </IconButton>
                         </Tooltip>
                       )}
@@ -891,11 +990,11 @@ export default function Portfolio() {
                               backgroundColor: 'rgba(255,255,255,0.1)',
                               '&:hover': { backgroundColor: theme.palette.primary.main },
                               borderRadius: 2,
-                              p: 1.5,
-                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                              p: 1.25,
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                             }}
                           >
-                            <Link/>
+                            <Link />
                           </IconButton>
                         </Tooltip>
                       )}
@@ -911,8 +1010,8 @@ export default function Portfolio() {
                               backgroundColor: 'rgba(255,255,255,0.1)',
                               '&:hover': { backgroundColor: theme.palette.primary.main },
                               borderRadius: 2,
-                              p: 1.5,
-                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                              p: 1.25,
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                             }}
                           >
                             <DownloadIcon />
@@ -926,6 +1025,7 @@ export default function Portfolio() {
             ))}
           </Grid>
         </motion.div>
+
 
         {/* ===== Carousel (small, keeps flow) ===== */}
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariant}>
