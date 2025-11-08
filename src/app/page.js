@@ -124,7 +124,7 @@ export default function Portfolio() {
     'Python', 'RStudio', 'JavaScript', 'SQL', 'Statistical Modeling', 'Supervised Learning', 'Unsupervised Learning', 'Deep Learning', 'Digital Signal Processing', 'Natural Language Processing', 'Computer Vision',
     'Bayesian Statistics', 'PowerBI', 'Tableau'
   ];
-  const galleryImages = ["UPE2.JPG", "XC2.png", "Wide.jpg", "Seniors.jpg", "EmpireStateBuilding.JPG","Little.png"];
+  const galleryImages = ["UPE2.JPG", "XC2.png", "Wide.jpg", "Seniors.jpg", "EmpireStateBuilding.jpg","Little.png"];
 
   const researchProjects = [
     {
