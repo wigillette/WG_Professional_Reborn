@@ -26,7 +26,6 @@ import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import emailjs from '@emailjs/browser';
 import { loadSlim } from "@tsparticles/slim"
-import { loadFull } from 'tsparticles';
 import Particles, {initParticlesEngine} from '@tsparticles/react';
 /**
  * Portfolio — upgraded, interactive page
@@ -125,7 +124,7 @@ export default function Portfolio() {
     'Python', 'RStudio', 'JavaScript', 'SQL', 'Statistical Modeling', 'Supervised Learning', 'Unsupervised Learning', 'Deep Learning', 'Digital Signal Processing', 'Natural Language Processing', 'Computer Vision',
     'Bayesian Statistics', 'PowerBI', 'Tableau'
   ];
-  const galleryImages = ["UPE2.JPG", "XC2.png", "Wide.jpg", "Seniors.jpg", "XC6.JPG","Little.png"];
+  const galleryImages = ["UPE2.JPG", "XC2.png", "Wide.jpg", "Seniors.jpg", "EmpireStateBuilding.JPG","Little.png"];
 
   const researchProjects = [
     {
@@ -166,7 +165,7 @@ export default function Portfolio() {
     },
     {
       title: 'Large Scale Audio Version Identification',
-      tech: 'PyTorch · Deep Learning · DSP',
+      tech: 'PyTorch · Deep Learning · Digital Signal Processing',
       bullets: [
         'Engineered self-similarity matrices from Da-TACOS for CNN input',
         'Built and evaluated CNNs for audio version/cover identification',
@@ -373,7 +372,7 @@ export default function Portfolio() {
 
   const carouselImages = [
     'Somerville.png',
-    'XC1.png',
+    'Salutatorian.jpg',
     'Parents.jpg',
     'XC7.JPG',
     'Boston.png',
@@ -383,7 +382,7 @@ export default function Portfolio() {
 
   const imageCaptions = {
     'Somerville.png': 'William and his extended family spending the day in Somerville, NJ',
-    'XC1.png': 'XC Centennial Conference Championships held at McDaniel College in October 2023',
+    'Salutatorian.jpg': 'William with his fraternity brothers at the Class of 2025 Valedictorian/Salutatorian Ceremony',
     'Parents.jpg': 'William and his parents attending his undergraduate commencement ceremony.',
     'XC7.JPG': 'Ursinus College Fall Twilight Senior Ceremony held in November 2023',
     'Boston.png': 'William and his immediate family at his sister\'s Emerson College graduate commencement ceremony in Boston, MA',
@@ -419,10 +418,10 @@ export default function Portfolio() {
       color: { value: "#ffffff" },
       links: { enable: true, color: "#ffffff", distance: 150, opacity: 0.5, width: 1 },
       move: { enable: true, speed: 4, direction: "none", random: false, straight: false, outModes: { default: "bounce" } },
-      number: { value: 120, density: { enable: true, area: 800 } },
+      number: { value: 300, density: { enable: true, area: 2000 } },
       opacity: { value: 0.5 },
       shape: { type: "circle" },
-      size: { value: { min: 1, max: 5 } },
+      size: { value: { min: 1, max: 3 } },
     },
     detectRetina: true,
   }), []);
@@ -541,25 +540,26 @@ export default function Portfolio() {
                 <Particles id="tsparticles" options={particlesOptions} />
               </Box>
             )}
-
             {/* Layer 2: Text */}
             <Box
               sx={{
                 position: 'relative',
                 zIndex: 1,
-                px: { xs: 1, md: 2 }, // tighter padding so text spans wider
-                maxWidth: '90%',      // optional: keeps it visually centered without edge crowding
+                px: { xs: 1, md: 1 }, // tighter padding so text spans wider
+                maxWidth: '95%',      // optional: keeps it visually centered without edge crowding
                 mx: 'auto',
+                backdropFilter: 'blur(4px)', // optional for glassy look
               }}
             >
               <Typography
                 variant="h5"
                 sx={{
                   fontWeight: 700,
-                  fontSize: 'clamp(1rem, 3vw, 1.8rem)', // min 1rem (mobile), fluid up to 2.5rem (desktop)
+                  fontSize: 'clamp(0.95rem, 2.5vw, 1.6rem)',
                   lineHeight: 1.1,
                   whiteSpace: 'normal',
                   wordBreak: 'break-word',
+                  textShadow: '0 0 8px rgba(0,0,0,0.5)', // subtle glow
                 }}
               >
                 Data Scientist & AI Enthusiast
@@ -569,10 +569,11 @@ export default function Portfolio() {
                 variant="h6"
                 sx={{
                   fontWeight: 400,
-                  fontSize: 'clamp(0.8rem, 1.5vw, 1.6rem)', // smaller but still fluid
+                  fontSize: 'clamp(0.75rem, 1vw, 1.4rem)', // smaller but still fluid
                   lineHeight: 1.25,
                   whiteSpace: 'normal',
                   wordBreak: 'break-word',
+                  textShadow: '0 0 8px rgba(0,0,0,0.5)', // subtle glow
                 }}
               >
                 Turning data into actionable insights and intelligent solutions to drive
@@ -618,16 +619,14 @@ export default function Portfolio() {
                   I am a data scientist with proficiency in Python, R, and full-stack development, focused on transforming complex data into actionable insights and intuitive applications. I graduated from Ursinus College with a triple major in Computer Science, Statistics, and Mathematics (GPA: 3.99), balancing academics with roles as a varsity athlete, fraternity academic chair, and lead tutor.
                 </Typography>
                 {/* Conditionally show more content */}
-                {(!isMobile || aboutMeExpanded) && (
-                  <>
-                    <Typography paragraph>
-                      As a Technical Delivery Analyst in the Public Sector, I create data-driven recommendations, optimize workforce management, and produce business intelligence reports. My foundation in analysis and software development was strengthened through projects like a Bayesian regression housing market study and leading the development of a full-stack degree planner app as Scrum Master.
-                    </Typography>
-                    <Typography paragraph>
-                      Currently, I am advancing my expertise through a Master’s in Data Science at Johns Hopkins University, specializing in AI and machine learning, with plans to progress to an applied statistics doctoral program. I aim to harness data science and intelligent automation to craft innovative solutions and drive digital transformation across industries.
-                    </Typography>
-                  </>
-                )}
+                <Collapse in={!isMobile || aboutMeExpanded} timeout={600}>
+                  <Typography paragraph>
+                    As a Technical Delivery Analyst in the Public Sector, I create data-driven recommendations, optimize workforce management, and produce business intelligence reports. My foundation in analysis and software development was strengthened through projects like a Bayesian regression housing market study and leading the development of a full-stack degree planner app as Scrum Master.
+                  </Typography>
+                  <Typography paragraph>
+                    Currently, I am advancing my expertise through a Master’s in Data Science at Johns Hopkins University, specializing in AI and machine learning, with plans to progress to an applied statistics doctoral program. I aim to harness data science and intelligent automation to craft innovative solutions and drive digital transformation across industries.
+                  </Typography>
+                </Collapse>
                 {/* Read more / less button visible only on mobile */}
                 {isMobile && (
                   <Button
@@ -1137,7 +1136,7 @@ export default function Portfolio() {
                       boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
                       transition: 'transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease',
                       '&:hover': {
-                        transform: 'scale(1.05)',
+                        transform: 'scale(1.025)',
                         boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
                         background: theme.palette.primary.main,
                       },
@@ -1176,7 +1175,7 @@ export default function Portfolio() {
             </Typography>
             <Card sx={{ p: 2, backgroundColor: theme.palette.tertiary.main, color: '#fff' }}>
               <Typography variant="body1" sx={{ mb: 1 }}>
-                Interested in collaborating or hiring? Send a message — I’ll respond promptly.
+                Interested in collaborating? Feel free to reach out below!
               </Typography>
               <Box component="form" onSubmit={handleSubmit}>
                 <TextField

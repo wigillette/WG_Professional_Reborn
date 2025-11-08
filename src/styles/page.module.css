@@ -47,6 +47,19 @@
   display: none;
 }
 
+#tsparticles {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+}
+#tsparticles > canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+
 .coursePages div p {
   font-family: 'Poppins';
   font-size: 90%;
