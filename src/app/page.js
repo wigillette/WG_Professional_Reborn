@@ -880,11 +880,16 @@ export default function Portfolio() {
                       </Typography>
 
                       {proj.tech && (
-                        <Stack
-                          direction="row"
-                          flexWrap="wrap"
-                          spacing={1}
-                          sx={{ mt: 1, mb: 1 }}
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: { xs: 0.5, sm: 1, md: 1 },      // horizontal gap
+                            rowGap: { xs: 0.5, sm: 1, md: 1.5 },   // vertical gap
+                            mt: 1,
+                            mb: 1,
+                            justifyContent: { xs: 'flex-start', sm: 'flex-start' },
+                          }}
                         >
                           {proj.tech.split(',').map((techItem) => (
                             <Chip
@@ -894,14 +899,17 @@ export default function Portfolio() {
                               sx={{
                                 backgroundColor: 'rgba(255,255,255,0.15)',
                                 color: '#fff',
-                                fontSize: '0.75rem',
+                                fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.75rem' },
                                 fontWeight: 400,
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.02em',
+                                px: { xs: 0.5, sm: 1 },
+                                py: { xs: 0.25, sm: 0.3 },
+                                whiteSpace: 'nowrap',
                               }}
                             />
                           ))}
-                        </Stack>
+                        </Box>
                       )}
 
                       {/* === Project Details === */}
